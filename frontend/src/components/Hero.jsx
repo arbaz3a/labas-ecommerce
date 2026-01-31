@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
     <section className="bg-white border border-gray-200 rounded-3xl overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[520px]">
+      <div className="grid grid-cols-1 gap-y-2 pt-2 lg:grid-cols-2 min-h-[520px]">
 
         {/* LEFT — TEXT */}
         <motion.div

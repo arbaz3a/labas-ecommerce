@@ -14,7 +14,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="px-21 py-3">
+    <div className="md:px-21 sm:px-16 px-11 py-3">
       <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />

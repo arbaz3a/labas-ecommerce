@@ -31,6 +31,8 @@ function LatestCollection() {
             name={item.name}
             price={item.price}
             image={item.image}
+            category={item.category}
+            subCategory={item.subCategory}
           />
         ))}
       </div>
