@@ -4,64 +4,60 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="border border-gray-200 rounded-2xl bg-white overflow-hidden">
-      <div className="flex flex-col-reverse lg:flex-row">
-        {/* left content section */}
+    <section className="bg-white border border-gray-200 rounded-3xl overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[520px]">
+
+        {/* LEFT — TEXT */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full lg:w-1/2 flex items-center px-6 sm:px-10 lg:px-14 py-14"
+          className="flex flex-col justify-center px-8 sm:px-12 lg:px-16"
         >
-          <div>
-            <p className="text-xs md:text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">
-              New Collection
-            </p>
+          <span className="text-xs tracking-[0.25em] text-gray-400 mb-4">
+            NEW SEASON
+          </span>
 
-            <h1 className="prata-regular text-4xl md:text-5xl leading-tight mb-6">
-              Latest Arrivals
-            </h1>
+          <h1 className="prata-regular text-4xl sm:text-5xl lg:text-6xl leading-tight text-gray-900 mb-6">
+            Modern <br /> Essentials
+          </h1>
 
-            <p className="text-sm md:text-base text-gray-500 mb-8 max-w-md">
-              Hand-picked styles made with premium materials. Discover pieces
-              designed to elevate your everyday fashion.
-            </p>
+          <p className="text-gray-500 max-w-md mb-10 text-sm sm:text-base">
+            Discover refined silhouettes crafted from premium materials and
+            designed for timeless everyday wear.
+          </p>
 
+          <div className="flex items-center gap-6">
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-7 py-3 rounded-md bg-gray-900 text-white text-sm md:text-base font-medium hover:bg-gray-800 transition hover:cursor-pointer"
+              whileHover={{ x: 6 }}
+              className="text-sm cursor-pointer uppercase tracking-widest font-medium border-b border-gray-900 pb-1"
             >
-              Shop Now
+              Shop Collection
             </motion.button>
+
+            <span className="text-xs text-gray-400 uppercase tracking-widest">
+              2026
+            </span>
           </div>
         </motion.div>
 
-        {/* right image section */}
+        {/* RIGHT — IMAGE */}
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7 }}
-          className="w-full lg:w-1/2"
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="relative"
         >
           <img
             src={assets.hero_img}
-            alt="Main product"
-            className="w-full h-[280px] sm:h-[320px] md:h-[360px] object-cover rounded-xl px-2"
+            alt="Hero Fashion"
+            className="w-full h-full object-cover"
           />
-          <div className="grid grid-cols-2 gap-1 p-2">
-            <img
-              src={assets.hero_img}
-              alt="Product 2"
-              className="w-full h-full object-cover rounded-lg"
-            />
-            <img
-              src={assets.hero_img}
-              alt="Product 3"
-              className="w-full h-full object-cover rounded-lg"
-            />
-          </div>
+
+          {/* subtle overlay */}
+          <div className="absolute inset-0 bg-black/5" />
         </motion.div>
+
       </div>
     </section>
   );

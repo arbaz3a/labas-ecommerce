@@ -7,7 +7,9 @@ function Navbar() {
   const [visible, setvisible] = useState(false);
   return (
     <div className="flex items-center justify-between py-4 px-3 font-medium">
-      <img src={assets.logo} alt="site_logo" className="w-32" />
+      <Link to="/">
+        <img src={assets.logo} alt="site_logo" className="w-32" />
+      </Link>
       <ul className="hidden sm:flex gap-3 text-gray-700">
         <NavLink to="/" className="flex flex-col text-sm gap-1 items-center">
           <p>Home</p>

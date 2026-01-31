@@ -75,6 +75,8 @@ import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
 import longline_coat from './longline_coat.webp'
 import heavyweight_pants from './heavyweight_pants.jpg'
+import return_product_icon from './return-product-icon.webp'
+import quality_policy_icon from './policy-icon.webp'
 
 export const assets = {
     logo,
@@ -96,7 +98,9 @@ export const assets = {
     stripe_logo,
     cross_icon,
     longline_coat,
-    heavyweight_pants
+    heavyweight_pants,
+    return_product_icon,
+    quality_policy_icon
 }
 
 export const products = [
@@ -266,7 +270,7 @@ export const products = [
         subCategory: "Topwear",
         sizes: ["S", "M", "L", "XL"],
         date: 1716626645448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaao",
@@ -278,7 +282,7 @@ export const products = [
         subCategory: "Bottomwear",
         sizes: ["S", "M", "L", "XL"],
         date: 1716627745448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaap",
@@ -338,7 +342,7 @@ export const products = [
         subCategory: "Bottomwear",
         sizes: ["S", "M", "L", "XL"],
         date: 1716633245448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaau",
@@ -350,7 +354,7 @@ export const products = [
         subCategory: "Winterwear",
         sizes: ["S", "M", "L", "XL"],
         date: 1716634345448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaav",

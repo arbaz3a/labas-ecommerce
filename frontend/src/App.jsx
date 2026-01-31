@@ -10,6 +10,7 @@ import Placeorder from "./pages/Placeorder";
 import Product from "./pages/Product";
 import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/product/:productID" element={<Product />} />
         <Route path="/orders" element={<Orders />} />
       </Routes>
+      <Footer/>
     </div>
   );
 }
