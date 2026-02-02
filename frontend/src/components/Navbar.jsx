@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { assets } from "../assets/frontend_assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiX, FiChevronLeft } from "react-icons/fi";
+import { shopcontext } from "../context/shopcontext";
 
 function Navbar() {
+  const { setShowSearch } = useContext(shopcontext);
+  const navigate = useNavigate();
+
   const [visible, setvisible] = useState(false);
   return (
     <div className="flex items-center justify-between py-4 px-3 font-medium">
@@ -16,10 +20,10 @@ function Navbar() {
           <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
         </NavLink>
         <NavLink
-          to="/collection"
+          to="/shop"
           className="flex flex-col text-sm gap-1 items-center"
         >
-          <p>Collection</p>
+          <p>Shop</p>
           <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
         </NavLink>
         <NavLink
@@ -38,11 +42,28 @@ function Navbar() {
         </NavLink>
       </ul>
       <div className="flex gap-4 items-center">
+        {/* mobile search icon */}
         <img
           src={assets.search_icon}
           alt="search_icon"
-          className="w-4 cursor-pointer"
+          onClick={() => {
+            navigate("/shop");
+            setShowSearch(true);
+          }}
+          className="w-4 cursor-pointer sm:hidden"
         />
+
+        {/* desktop search bar */}
+        <div
+          onClick={() => {
+            navigate("/shop");
+            setShowSearch(true);
+          }}
+          className="hidden sm:flex items-center border-b border-gray-400 cursor-pointer px-3"
+        >
+          <span className="text-sm tracking-wide text-gray-600">SEARCH</span>
+        </div>
+
         <div className="group relative">
           <img
             src={assets.profile_icon}
@@ -107,11 +128,11 @@ function Navbar() {
           </NavLink>
 
           <NavLink
-            to="/collection"
+            to="/shop"
             onClick={() => setvisible(false)}
             className="px-3 py-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 hover:text-black transition"
           >
-            Collection
+            Shop
           </NavLink>
 
           <NavLink

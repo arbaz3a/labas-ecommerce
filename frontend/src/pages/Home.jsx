@@ -3,7 +3,6 @@ import Hero from '../components/Hero'
 import LatestCollection from '../components/LatestCollection'
 import BestSeller from '../components/BestSeller'
 import OurPolicy from '../components/Ourpolicy'
-import NewsletterSubs from '../components/NewsLetter'
 
 function Home() {
   return (
