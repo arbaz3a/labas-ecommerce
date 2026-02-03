@@ -7,16 +7,16 @@ function ProductFullscreen({
   productdata,
   prevImage,
   nextImage,
-  handleFSTouchStart,
-  handleFSTouchEnd,
+  handleTouchStart,
+  handleTouchEnd,
 }) {
   if (!isFullscreen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black/30 backdrop-blur-3xl z-50 flex flex-col items-center justify-center"
-      onTouchStart={handleFSTouchStart}
-      onTouchEnd={handleFSTouchEnd}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <img
         src={mainImage}

@@ -47,32 +47,17 @@ function Product() {
     setMainImage(productdata.image[next]);
   };
 
-  // swipe handlers for main image mobile version
+  // swipe handlers for main image mobile version + fullscreen (mobile & touch devices)
   let touchStartX = 0;
-  let touchEndX = 0;
 
   const handleTouchStart = (e) => {
     touchStartX = e.changedTouches[0].screenX;
   };
 
   const handleTouchEnd = (e) => {
-    touchEndX = e.changedTouches[0].screenX;
+    const touchEndX = e.changedTouches[0].screenX;
     if (touchEndX < touchStartX - 50) nextImage(); // swipe left
     if (touchEndX > touchStartX + 50) prevImage(); // swipe right
-  };
-
-  // swipe handlers for fullscreen desktop
-  let fsTouchStartX = 0;
-  let fsTouchEndX = 0;
-
-  const handleFSTouchStart = (e) => {
-    fsTouchStartX = e.changedTouches[0].screenX;
-  };
-
-  const handleFSTouchEnd = (e) => {
-    fsTouchEndX = e.changedTouches[0].screenX;
-    if (fsTouchEndX < fsTouchStartX - 50) nextImage();
-    if (fsTouchEndX > fsTouchStartX + 50) prevImage();
   };
 
   return (
@@ -99,8 +84,8 @@ function Product() {
         productdata={productdata}
         prevImage={prevImage}
         nextImage={nextImage}
-        handleFSTouchStart={handleFSTouchStart}
-        handleFSTouchEnd={handleFSTouchEnd}
+        handleTouchStart={handleTouchStart}
+        handleTouchEnd={handleTouchEnd}
       />
 
       {/* right product info details section*/}
