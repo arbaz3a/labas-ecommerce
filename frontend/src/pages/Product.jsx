@@ -4,6 +4,7 @@ import { shopcontext } from "../context/shopcontext";
 import ProductFullscreen from "../components/ProductFullscreen";
 import ProductInfoDetails from "../components/ProductInfoDetails";
 import ProductImageGallery from "../components/ProductImageGallery";
+import RelatedProducts from "../components/RelatedProducts";
 
 function Product() {
   const { productID } = useParams();
@@ -61,47 +62,50 @@ function Product() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-8 md:gap-10 items-start">
-      {/* left images + display image + dots image representation */}
-      <ProductImageGallery
-        productdata={productdata}
-        mainImage={mainImage}
-        imageIndex={imageIndex}
-        setMainImage={setMainImage}
-        setImageIndex={setImageIndex}
-        prevImage={prevImage}
-        nextImage={nextImage}
-        handleTouchStart={handleTouchStart}
-        handleTouchEnd={handleTouchEnd}
-        setIsFullscreen={setIsFullscreen}
-      />
+    <>
+      <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-8 md:gap-10 items-start">
+        {/* left images + display image + dots image representation */}
+        <ProductImageGallery
+          productdata={productdata}
+          mainImage={mainImage}
+          imageIndex={imageIndex}
+          setMainImage={setMainImage}
+          setImageIndex={setImageIndex}
+          prevImage={prevImage}
+          nextImage={nextImage}
+          handleTouchStart={handleTouchStart}
+          handleTouchEnd={handleTouchEnd}
+          setIsFullscreen={setIsFullscreen}
+        />
 
-      {/* after zoom fullscreen section*/}
-      <ProductFullscreen
-        isFullscreen={isFullscreen}
-        setIsFullscreen={setIsFullscreen}
-        mainImage={mainImage}
-        productdata={productdata}
-        prevImage={prevImage}
-        nextImage={nextImage}
-        handleTouchStart={handleTouchStart}
-        handleTouchEnd={handleTouchEnd}
-      />
+        {/* after zoom fullscreen section*/}
+        <ProductFullscreen
+          isFullscreen={isFullscreen}
+          setIsFullscreen={setIsFullscreen}
+          mainImage={mainImage}
+          productdata={productdata}
+          prevImage={prevImage}
+          nextImage={nextImage}
+          handleTouchStart={handleTouchStart}
+          handleTouchEnd={handleTouchEnd}
+        />
 
-      {/* right product info details section*/}
-      <ProductInfoDetails
-        productdata={productdata}
-        currency={currency}
-        selectedSize={selectedSize}
-        setSelectedSize={setSelectedSize}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        openDesc={openDesc}
-        setOpenDesc={setOpenDesc}
-        openCare={openCare}
-        setOpenCare={setOpenCare}
-      />
-    </div>
+        {/* right product info details section*/}
+        <ProductInfoDetails
+          productdata={productdata}
+          currency={currency}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          openDesc={openDesc}
+          setOpenDesc={setOpenDesc}
+          openCare={openCare}
+          setOpenCare={setOpenCare}
+        />
+      </div>
+      <RelatedProducts currentProduct={productdata} />
+    </>
   );
 }
 

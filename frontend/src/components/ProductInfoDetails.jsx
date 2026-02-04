@@ -18,14 +18,13 @@ function ProductInfoDetails({
         {productdata.category} / {productdata.subCategory}
       </p>
 
-      {/* name of product */}
       <h1 className="text-3xl tracking-widest font-semibold leading-snug select-none">
         {productdata.name}
       </h1>
 
       <p className="text-xl font-medium">
         {currency}
-        {productdata.price}
+        {productdata.price.toFixed(2)}
       </p>
 
       <div>
@@ -53,9 +52,9 @@ function ProductInfoDetails({
         <p className="text-sm font-medium mb-2 uppercase tracking-widest">
           Quantity
         </p>
-        <div className="inline-flex items-center gap-5">
+        <div className="inline-flex items-center gap-2">
           <button
-            className="w-9 h-9 flex items-center justify-center text-lg cursor-pointer border border-gray-200 hover:bg-gray-100 transition"
+            className="w-8 h-8 flex items-center justify-center text-lg cursor-pointer border border-gray-100 hover:bg-gray-100 transition"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           >
             −
@@ -66,8 +65,8 @@ function ProductInfoDetails({
           </span>
 
           <button
-            className="w-9 h-9 flex items-center justify-center border border-gray-200 hover:bg-gray-100 transition cursor-pointer"
-            onClick={() => setQuantity((q) => Math.min(7, q + 1))}
+            className="w-8 h-8 flex items-center justify-center border border-gray-100 hover:bg-gray-100 transition cursor-pointer"
+            onClick={() => setQuantity((q) => Math.min(9, q + 1))}
           >
             +
           </button>
@@ -76,7 +75,7 @@ function ProductInfoDetails({
 
       <div className="flex flex-col gap-3 mt-4">
         <button className="w-full py-3 bg-black text-white uppercase text-sm tracking-wide hover:opacity-90 cursor-pointer">
-          Add to Cart
+          Add
         </button>
 
         <button className="w-full py-3 border border-black text-black uppercase text-sm tracking-wide hover:bg-gray-100 hover:text-black transition cursor-pointer">

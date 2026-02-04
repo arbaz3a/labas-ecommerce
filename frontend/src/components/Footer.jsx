@@ -5,7 +5,7 @@ import Newsletter from "./Newsletter";
 
 function Footer() {
   return (
-    <footer className="bg-gray-50 text-gray-700 pt-16">
+    <footer className="bg-gray-50 text-gray-700 mt-9 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Top Grid Section */}
@@ -57,7 +57,7 @@ function Footer() {
 
         {/* Copy Right Section */}
         <div className="pt-8 text-center text-gray-500 text-sm">
-          © {new Date().getFullYear()} ZevyLabas. All rights reserved.
+          © {new Date().getFullYear()} ZevyLabas
         </div>
       </div>
     </footer>

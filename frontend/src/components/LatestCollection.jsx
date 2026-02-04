@@ -13,7 +13,6 @@ function LatestCollection() {
 
   return (
     <div className="my-14 px-4 sm:px-8">
-      {/* Heading */}
       <div className="text-center mb-10">
         <Title text1={"LATEST"} text2={"COLLECTIONS"} />
         <p className="mt-3 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
@@ -22,18 +21,22 @@ function LatestCollection() {
         </p>
       </div>
 
-      {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {latestproduct.map((item, index) => (
-          <Productitems
+          <div
             key={index}
-            id={item._id}
-            name={item.name}
-            price={item.price}
-            image={item.image}
-            category={item.category}
-            subCategory={item.subCategory}
-          />
+            className="border border-gray-200 rounded-2xl p-3 bg-white hover:shadow-xl transition"
+          >
+            <Productitems
+              key={index}
+              id={item._id}
+              name={item.name}
+              price={item.price}
+              image={item.image}
+              category={item.category}
+              subCategory={item.subCategory}
+            />
+          </div>
         ))}
       </div>
     </div>

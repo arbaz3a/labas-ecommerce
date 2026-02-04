@@ -96,7 +96,7 @@ function Shop() {
               {filteredProducts.map((item) => (
                 <div
                   key={item._id}
-                  className="border border-gray-200 rounded-2xl p-4 bg-white hover:shadow-xl transition"
+                  className="border border-gray-200 rounded-2xl p-3 bg-white hover:shadow-xl transition"
                 >
                   <Productitems
                     id={item._id}
