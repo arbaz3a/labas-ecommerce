@@ -22,7 +22,8 @@ a.active hr {
   }
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 
@@ -32,4 +33,12 @@ html, body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.custom-toast {
+  max-width: 260px !important;
+  padding: 10px 14px !important;
+  font-size: 14px;
+  border-radius: 10px;
+  text-align: center;
 }

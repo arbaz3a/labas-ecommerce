@@ -3,9 +3,11 @@ import { assets } from "../assets/frontend_assets/assets";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiX, FiChevronLeft } from "react-icons/fi";
 import { shopcontext } from "../context/shopcontext";
+import CartDrawer from "../components/CartDrawer";
 
 function Navbar() {
-  const { setShowSearch } = useContext(shopcontext);
+  const { setShowSearch, cartCount } = useContext(shopcontext);
+  const [showCartDrawer, setShowCartDrawer] = useState(false);
   const navigate = useNavigate();
 
   const [visible, setvisible] = useState(false);
@@ -78,18 +80,27 @@ function Navbar() {
             </div>
           </div>
         </div>
-        <Link to="/cart" className="relative">
-          <img src={assets.cart_icon} alt="cart_icon" className="w-4" />
-          <p className="absolute -right-1 -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
-            12
-          </p>
-        </Link>
-        <img
-          src={assets.menu_icon}
-          onClick={() => setvisible(true)}
-          alt="hmaburger_icon"
-          className="cursor-pointer w-4 sm:hidden"
-        />
+
+        <div className="relative">
+          <button className="relative" onClick={() => setShowCartDrawer(true)}>
+            <img src={assets.cart_icon} alt="cart_icon" className="w-4" />
+            {cartCount > 0 && (
+              <p className="absolute -right-1 -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
+                {cartCount}
+              </p>
+            )}
+          </button>
+        </div>
+
+        {showCartDrawer && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowCartDrawer(false)}
+            ></div>
+            <CartDrawer onClose={() => setShowCartDrawer(false)} />
+          </>
+        )}
       </div>
 
       {/* drawer hamburger */}

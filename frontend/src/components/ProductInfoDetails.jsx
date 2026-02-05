@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { shopcontext } from "../context/shopcontext";
+import { toast } from "react-toastify";
 
 function ProductInfoDetails({
   productdata,
@@ -12,6 +14,7 @@ function ProductInfoDetails({
   openCare,
   setOpenCare,
 }) {
+  const { addToCart } = useContext(shopcontext);
   return (
     <div className="flex-1 flex flex-col gap-6">
       <p className="text-xs uppercase tracking-widest text-gray-500">
@@ -35,7 +38,9 @@ function ProductInfoDetails({
           {productdata.sizes.map((size) => (
             <button
               key={size}
-              onClick={() => setSelectedSize(size)}
+              onClick={() =>
+                setSelectedSize((prev) => (prev === size ? null : size))
+              }
               className={`px-3 py-2 text-xs rounded-xs transition cursor-pointer outline-none border ${
                 selectedSize === size
                   ? "bg-black text-white border-black cursor-default"
@@ -74,7 +79,25 @@ function ProductInfoDetails({
       </div>
 
       <div className="flex flex-col gap-3 mt-4">
-        <button className="w-full py-3 bg-black text-white uppercase text-sm tracking-wide hover:opacity-90 cursor-pointer">
+        <button
+          onClick={() => {
+            // remove any existing toast first
+            toast.dismiss();
+
+            // show error if size not selected
+            if (!selectedSize) {
+              toast("Please select a size", {
+                type: "error",
+                toastId: "size-error-toast",
+              });
+              return;
+            }
+
+            // cart logic
+            addToCart(productdata._id, selectedSize, quantity);
+          }}
+          className="w-full py-3 bg-black text-white uppercase text-sm tracking-wide hover:opacity-90 cursor-pointer"
+        >
           Add
         </button>
 

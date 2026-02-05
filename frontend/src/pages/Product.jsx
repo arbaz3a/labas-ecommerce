@@ -13,7 +13,7 @@ function Product() {
   const [productdata, setproductdata] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [openDesc, setOpenDesc] = useState(false);
   const [openCare, setOpenCare] = useState(false);
@@ -26,6 +26,8 @@ function Product() {
       setMainImage(product.image[0]);
       setSelectedSize(product.sizes?.[0] || "");
       setImageIndex(0);
+      setQuantity(1);
+      setSelectedSize(null);
     }
   };
 

@@ -16,7 +16,7 @@ function RelatedProducts({ currentProduct }) {
         p._id !== currentProduct._id,
     );
 
-    if (filtered.length < 5) {
+    if (filtered.length < 6) {
       filtered = products.filter(
         (p) =>
           p.category === currentProduct.category &&
@@ -24,7 +24,7 @@ function RelatedProducts({ currentProduct }) {
       );
     }
 
-    setRelated(filtered.slice(0, 5));
+    setRelated(filtered.slice(0, 6));
   }, [currentProduct, products]);
 
   if (related.length === 0) return null;
@@ -43,7 +43,7 @@ function RelatedProducts({ currentProduct }) {
           View more <FiChevronRight />
         </Link>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
         {related.map((product) => (
           <Link
             key={product._id}
