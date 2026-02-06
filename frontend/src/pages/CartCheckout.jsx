@@ -2,7 +2,7 @@ import React from 'react'
 
 function CartCheckout() {
   return (
-    <div>CartCheckout</div>
+    <div>Cart Checkout component show cart detail and payment</div>
   )
 }
 
