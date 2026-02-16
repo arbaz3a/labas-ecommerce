@@ -3,6 +3,7 @@ import { shopcontext } from "../context/shopcontext";
 import { FiTrash2, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import OrderSummary from "./OrderSummary";
 
 function CartDrawer({ onClose }) {
   const {
@@ -42,7 +43,10 @@ function CartDrawer({ onClose }) {
     >
       <div className="flex items-center justify-between px-6 py-4 border-b">
         <h2 className="text-lg font-semibold tracking-widest">Shopping Cart</h2>
-        <button onClick={onClose} className="cursor-pointer p-2 rounded-lg hover:bg-gray-100">
+        <button
+          onClick={onClose}
+          className="cursor-pointer p-2 rounded-lg hover:bg-gray-100"
+        >
           <FiX size={22} />
         </button>
       </div>
@@ -138,48 +142,14 @@ function CartDrawer({ onClose }) {
 
       {/* ORDER SUMMARY */}
       {items.length > 0 && (
-        <div className="px-6 py-4 border-t text-xs tracking-wider">
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-medium ">
-              Subtotal ({items.length} items)
-            </span>
-
-            <span className="w-20 text-left font-medium">
-              {currency}
-              {subtotal.toFixed(2)}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-medium">Delivery</span>
-
-            <span className="w-20 text-left font-medium">
-              {currency}
-              {Number(delivery_fee).toFixed(2)}
-            </span>
-          </div>
-
-          <div className="h-px bg-gray-200 my-2" />
-
-          <div className="flex justify-between items-center text-sm font-semibold">
-            <span>Total</span>
-
-            <span className="w-20 text-left">
-              {currency}
-              {total.toFixed(2)}
-            </span>
-          </div>
-
-          <button
-            onClick={() => {
-              onClose();
-              navigate("/cart-checkout");
-            }}
-            className="w-full mt-4 py-3 bg-black cursor-pointer text-white text-xs tracking-widest hover:opacity-90 transition"
-          >
-            CHECKOUT
-          </button>
-        </div>
+        <OrderSummary
+          items={items}
+          currency={currency}
+          subtotal={subtotal}
+          delivery_fee={delivery_fee}
+          total={total}
+          onClose={onClose}
+        />
       )}
     </motion.div>
   );

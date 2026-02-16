@@ -16,7 +16,7 @@ function Navbar() {
       <Link to="/">
         <img src={assets.logo} alt="site_logo" className="w-32" />
       </Link>
-      <ul className="hidden sm:flex gap-3 text-gray-700">
+      <ul className="hidden sm:flex gap-5 text-gray-700">
         <NavLink to="/" className="flex flex-col text-sm gap-1 items-center">
           <p>Home</p>
           <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
@@ -72,7 +72,7 @@ function Navbar() {
             className="w-4 cursor-pointer"
             alt="profile_icon"
           />
-          <div className="group-hover:block hidden dropdown-menu absolute right-0 pt-3">
+          <div className="group-hover:block hidden dropdown-menu absolute right-0 pt-3 z-20">
             <div className="flex flex-col w-36 py-3 px-2.5 gap-1.5 rounded bg-slate-50 text-gray-600">
               <p className="hover:text-black cursor-pointer">My Profile</p>
               <p className="hover:text-black cursor-pointer">Orders</p>
@@ -83,9 +83,9 @@ function Navbar() {
 
         <div className="relative">
           <button className="relative" onClick={() => setShowCartDrawer(true)}>
-            <img src={assets.cart_icon} alt="cart_icon" className="w-4" />
+            <img src={assets.cart_icon} alt="cart_icon" className="w-4 cursor-pointer" />
             {cartCount > 0 && (
-              <p className="absolute -right-1 -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
+              <p className="absolute -right-1 cursor-pointer -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
                 {cartCount}
               </p>
             )}

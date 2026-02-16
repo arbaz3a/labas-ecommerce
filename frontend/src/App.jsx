@@ -5,12 +5,11 @@ import About from "./pages/About";
 import Shop from "./pages/Shop";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
-import Placeorder from "./pages/Placeorder";
 import Product from "./pages/Product";
 import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import CartCheckout from "./pages/CartCheckout"
+import Checkout from "./pages/Checkout";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -37,11 +36,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/cart-checkout" element={<CartCheckout/>} />
+        <Route path="/checkout" element={<Checkout/>} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/place-order" element={<Placeorder />} />
         <Route path="/product/:productID" element={<Product />} />
         <Route path="/orders" element={<Orders />} />
       </Routes>

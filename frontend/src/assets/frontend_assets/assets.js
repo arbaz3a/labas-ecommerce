@@ -76,6 +76,9 @@ import longline_coat from "./longline_coat.webp";
 import heavyweight_pants from "./heavyweight_pants.jpg";
 import return_product_icon from "./return-product-icon.webp";
 import quality_policy_icon from "./policy-icon.webp";
+import visa_logo from "./visa_logo.png";
+import mastercard_logo from "./mastercard_logo.webp"
+
 
 export const assets = {
   logo,
@@ -100,6 +103,8 @@ export const assets = {
   heavyweight_pants,
   return_product_icon,
   quality_policy_icon,
+  mastercard_logo,
+  visa_logo,
 };
 
 export const products = [
