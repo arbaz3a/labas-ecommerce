@@ -66,20 +66,12 @@ function Navbar() {
           <span className="text-sm tracking-wide text-gray-600">SEARCH</span>
         </div>
 
-        <div className="group relative">
-          <img
-            src={assets.profile_icon}
-            className="w-4 cursor-pointer"
-            alt="profile_icon"
-          />
-          <div className="group-hover:block hidden dropdown-menu absolute right-0 pt-3 z-20">
-            <div className="flex flex-col w-36 py-3 px-2.5 gap-1.5 rounded bg-slate-50 text-gray-600">
-              <p className="hover:text-black cursor-pointer">My Profile</p>
-              <p className="hover:text-black cursor-pointer">Orders</p>
-              <p className="hover:text-black cursor-pointer">Logout</p>
-            </div>
-          </div>
-        </div>
+        <img
+  src={assets.profile_icon}
+  onClick={() => navigate("/profile")}
+  className="w-4 cursor-pointer"
+  alt="profile_icon"
+/>
 
         <div className="relative">
           <button className="relative" onClick={() => setShowCartDrawer(true)}>
