@@ -43,24 +43,56 @@ function Checkout() {
   };
 
   const handlePayNow = () => {
-    const requiredFields = [
-      "email",
+    let newErrors = {};
+
+    if (!formData.email?.trim()) {
+      newErrors.email = "Please enter your email address";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = "Please enter a valid email address";
+      }
+    }
+
+    const requiredShippingFields = [
+      "city",
       "firstName",
       "lastName",
       "address",
-      "city",
       "phone",
     ];
 
-    let newErrors = {};
-    requiredFields.forEach((field) => {
-      if (!formData[field]) newErrors[field] = true;
+    requiredShippingFields.forEach((field) => {
+      if (!formData[field]?.trim()) {
+        newErrors[field] = "This field is required";
+      }
     });
+
+    if (!formData.billingSame) {
+      const requiredBillingFields = [
+        "billingFirstName",
+        "billingLastName",
+        "billingAddress",
+      ];
+
+      requiredBillingFields.forEach((field) => {
+        if (!formData[field]?.trim()) {
+          newErrors[field] = "This field is required";
+        }
+      });
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
+    if (formData.paymentMethod === "cod") {
+      navigate("/orderconfirmation", { state: { formData } });
+      return;
+    }
+
+    console.log("Proceed card payment");
   };
 
   return (
@@ -78,7 +110,7 @@ function Checkout() {
                 Contact
               </h2>
               <p
-                className="text-xs cursor-pointer text-gray-800"
+                className="text-xs cursor-pointer text-gray-800 underline"
                 onClick={() => navigate("/login")}
               >
                 Sign in
@@ -93,10 +125,13 @@ function Checkout() {
               onChange={handleChange}
               className={`w-full border ${
                 errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-md px-5 py-3 mb-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-500 transition-colors`}
+              } rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-500 transition-colors`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-[11px] mt-1">{errors.email}</p>
+            )}
 
-            <label className="flex items-center gap-1 mb-1 text-xs">
+            <label className="flex items-center gap-1 mb-1 mt-1 text-xs">
               <input
                 type="checkbox"
                 checked={saveEmailInfo}
@@ -106,7 +141,6 @@ function Checkout() {
               <span>Email me with news and offers</span>
             </label>
           </div>
-
           {/* Delivery */}
           <h2
             className="text-lg font-semibold mb-2 tracking-wider"
@@ -133,7 +167,6 @@ function Checkout() {
               <span>Save this information for next time</span>
             </label>
           </div>
-
           {/* Shipping */}
           <div>
             <h2
@@ -150,7 +183,6 @@ function Checkout() {
               </span>
             </div>
           </div>
-
           {/* Payment Options */}
           <div className="flex flex-col gap-1 mb-3">
             <h2
@@ -200,7 +232,6 @@ function Checkout() {
               </span>
             </label>
           </div>
-
           {/* Billing Address */}
           <h2
             className="text-lg font-semibold mb-2 tracking-wider"
@@ -208,7 +239,6 @@ function Checkout() {
           >
             Billing address
           </h2>
-
           {/* Option 1: same as shipping */}
           <div
             className={`border border-gray-300 rounded-md p-2 mb-1 text-gray-700 cursor-pointer transition-colors ${
@@ -227,7 +257,6 @@ function Checkout() {
               </span>
             </label>
           </div>
-
           {/* Option 2: different billing address */}
           <div
             className={`border border-gray-300 rounded-md py-2 px-1 mb-6 text-gray-700 cursor-pointer transition-colors ${
@@ -266,13 +295,12 @@ function Checkout() {
               />
             </div>
           </div>
-
-          {/* Pay Now */}
+          {/* Pay Now / Complete Order */}
           <button
             onClick={handlePayNow}
             className="cursor-pointer w-full py-4 bg-black text-white font-semibold rounded-md hover:opacity-90 transition text-sm"
           >
-            Pay now
+            {formData.paymentMethod === "cod" ? "Complete order" : "Pay now"}
           </button>
           {/* POPUP Message*/}
           <PopupMessage />

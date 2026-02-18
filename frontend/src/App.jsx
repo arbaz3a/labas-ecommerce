@@ -10,6 +10,7 @@ import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -36,12 +37,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/checkout" element={<Checkout/>} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/product/:productID" element={<Product />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
       </Routes>
       <Footer />
     </div>
