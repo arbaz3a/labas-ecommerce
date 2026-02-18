@@ -10,7 +10,7 @@ import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
-import OrderConfirmationPage from "./pages/OrderConfirmationPage";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,7 +43,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/product/:productID" element={<Product />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
+        <Route path="/orderconfirmation" element={<OrderConfirmation />} />
       </Routes>
       <Footer />
     </div>

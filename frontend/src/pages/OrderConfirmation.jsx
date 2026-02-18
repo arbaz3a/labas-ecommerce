@@ -1,9 +1,9 @@
 import { useLocation } from "react-router-dom";
-import OrderConfirmation from "../components/OrderConfirmation";
+import OrderConfirmDetails from "../components/OrderConfirmDetails";
 import CheckoutOrderSummary from "../components/CheckoutOrderSummary";
 import PopupMessage from "../components/PopupMessage";
 
-function OrderConfirmationPage() {
+function OrderConfirmation() {
   const { state } = useLocation();
   const formData = state?.formData || {};
 
@@ -13,7 +13,7 @@ function OrderConfirmationPage() {
 
         {/* LEFT */}
         <div className="bg-white p-10 rounded-lg shadow-sm space-y-6 relative">
-          <OrderConfirmation formData={formData} />
+          <OrderConfirmDetails formData={formData} />
           <PopupMessage />
         </div>
 
@@ -25,4 +25,4 @@ function OrderConfirmationPage() {
   );
 }
 
-export default OrderConfirmationPage;
+export default OrderConfirmation;

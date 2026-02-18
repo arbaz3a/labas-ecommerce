@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { shopcontext } from "../context/shopcontext";
 import { FaEnvelope, FaWhatsapp } from "react-icons/fa";
 
-function OrderConfirmation({ formData }) {
+function OrderConfirmDetails({ formData }) {
   const navigate = useNavigate();
   const { currency, delivery_fee } = useContext(shopcontext);
 
@@ -136,4 +136,4 @@ function OrderConfirmation({ formData }) {
   );
 }
 
-export default OrderConfirmation;
+export default OrderConfirmDetails;

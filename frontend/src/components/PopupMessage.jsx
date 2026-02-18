@@ -94,7 +94,7 @@ function PopupMessage() {
   return (
     <>
       {/* Links */}
-      <div className="flex justify-center gap-6 mt-1 flex-wrap text-xs text-gray-500">
+      <div className="flex justify-center gap-5 mt-1 flex-wrap text-xs text-gray-500">
         {popupmessages.map((link, index) => (
           <a
             key={index}
