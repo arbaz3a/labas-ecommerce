@@ -1,6 +1,6 @@
 import React from "react";
 
-function SettingsPage() {
+function Settings() {
   return (
     <div className="py-10 px-6">
       <h2 className="text-2xl font-semibold mb-8">Settings</h2>
@@ -22,4 +22,4 @@ function SettingsPage() {
   );
 }
 
-export default SettingsPage;
+export default Settings;

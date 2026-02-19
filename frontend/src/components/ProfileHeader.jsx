@@ -7,7 +7,7 @@ function ProfileHeader() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  const isOrders = location.pathname === "/orderspage";
+  const isOrders = location.pathname === "/orders";
   const isProfile = location.pathname === "/profile";
 
   return (
@@ -23,7 +23,7 @@ function ProfileHeader() {
 
         <div className="flex gap-5 text-xs font-medium">
           <button
-            onClick={() => navigate("/orderspage")}
+            onClick={() => navigate("/orders")}
             className={`transition-all ${
               isOrders
                 ? "border-b-2 border-black pb-1"
