@@ -131,7 +131,7 @@ function Profile() {
   };
 
   return (
-    <div className="px-6 py-10 relative">
+    <div className="px-6 py-10 relative bg-[#f6f6f6]">
       <h2 className="text-lg font-medium mb-8">Profile</h2>
 
       <div className="bg-white rounded-xl p-5 mb-6 shadow-sm">

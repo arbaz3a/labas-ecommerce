@@ -11,64 +11,57 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const [cartCount, setCartCount] = useState(0);
+  const [orders, setOrders] = useState([]);
 
-  // add to cart
+  // ================= ADD TO CART =================
   const addToCart = (itemID, itemSize, quantity = 1) => {
     if (!itemID || !itemSize) return;
 
-    let cartData = structuredClone(cartItems);
+    setCartItems((prev) => {
+      let cartData = structuredClone(prev);
 
-    if (cartData[itemID]) {
-      if (cartData[itemID][itemSize]) {
-        // update quantity with limits
-        let newQty = cartData[itemID][itemSize] + quantity;
-        cartData[itemID][itemSize] = Math.min(9, Math.max(1, newQty));
-      } else {
-        cartData[itemID][itemSize] = Math.min(9, Math.max(1, quantity));
-      }
-    } else {
-      cartData[itemID] = {};
-      cartData[itemID][itemSize] = Math.min(9, Math.max(1, quantity));
-    }
+      if (!cartData[itemID]) cartData[itemID] = {};
 
-    setCartItems(cartData);
+      let currentQty = cartData[itemID][itemSize] || 0;
+      let newQty = currentQty + quantity;
+
+      cartData[itemID][itemSize] = Math.min(9, Math.max(1, newQty));
+
+      return cartData;
+    });
   };
 
-  // remove item from cart
+  // ================= REMOVE FROM CART =================
   const removeFromCart = (itemID, itemSize) => {
-    let cartData = structuredClone(cartItems);
-    if (cartData[itemID] && cartData[itemID][itemSize]) {
-      delete cartData[itemID][itemSize];
-      if (Object.keys(cartData[itemID]).length === 0) {
-        delete cartData[itemID];
+    setCartItems((prev) => {
+      let cartData = structuredClone(prev);
+
+      if (cartData[itemID]?.[itemSize]) {
+        delete cartData[itemID][itemSize];
+
+        if (Object.keys(cartData[itemID]).length === 0) {
+          delete cartData[itemID];
+        }
       }
-      setCartItems(cartData);
-    }
+
+      return cartData;
+    });
   };
 
-  
-  // // update cart count based on unique size + product name
-
-  // useEffect(() => {
-  //   let totalCount = 0;
-  //   Object.values(cartItems).forEach((sizes) => {
-  //     totalCount += Object.keys(sizes).length; // count each size once
-  //   });
-  //   setCartCount(totalCount);
-  // }, [cartItems]);
-
-
-  // update cart count based on total number of items,
+  // ================= CART COUNT =================
   useEffect(() => {
     let totalCount = 0;
+
     Object.values(cartItems).forEach((sizes) => {
       Object.values(sizes).forEach((qty) => {
         totalCount += qty;
       });
     });
+
     setCartCount(totalCount);
   }, [cartItems]);
 
+  // ================= CONTEXT VALUE =================
   const value = {
     products,
     currency,
@@ -81,6 +74,9 @@ const ShopContextProvider = (props) => {
     addToCart,
     removeFromCart,
     cartCount,
+    orders,
+    setOrders,
+    setCartItems,
   };
 
   return (

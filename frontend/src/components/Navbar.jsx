@@ -67,15 +67,19 @@ function Navbar() {
         </div>
 
         <img
-  src={assets.profile_icon}
-  onClick={() => navigate("/profile")}
-  className="w-4 cursor-pointer"
-  alt="profile_icon"
-/>
+          src={assets.profile_icon}
+          onClick={() => navigate("/profile")}
+          className="w-4 cursor-pointer"
+          alt="profile_icon"
+        />
 
         <div className="relative">
           <button className="relative" onClick={() => setShowCartDrawer(true)}>
-            <img src={assets.cart_icon} alt="cart_icon" className="w-4 cursor-pointer" />
+            <img
+              src={assets.cart_icon}
+              alt="cart_icon"
+              className="w-4 cursor-pointer"
+            />
             {cartCount > 0 && (
               <p className="absolute -right-1 cursor-pointer -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
                 {cartCount}

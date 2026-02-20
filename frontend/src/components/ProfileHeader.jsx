@@ -1,18 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { assets } from "../assets/frontend_assets/assets";
+import { ProfileContext } from "../context/ProfileContext";
 
 function ProfileHeader() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { profile } = useContext(ProfileContext);
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef();
 
   const isOrders = location.pathname === "/orders";
   const isProfile = location.pathname === "/profile";
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="bg-white flex py-7 items-center justify-between relative">
-      {/* brand, orders and profile */}
+    <div className="bg-white flex py-7 px-2 items-center justify-between relative">
       <div className="flex items-center gap-5">
         <h1
           onClick={() => navigate("/")}
@@ -46,7 +61,8 @@ function ProfileHeader() {
         </div>
       </div>
 
-      <div className="relative">
+      {/* dropdown sction on profile click */}
+      <div className="relative" ref={dropdownRef}>
         <img
           src={assets.profile_icon}
           alt="profile"
@@ -54,31 +70,37 @@ function ProfileHeader() {
           onClick={() => setOpen(!open)}
         />
 
-        {open && (
-          <div className="absolute right-0 mt-4 w-64 bg-white border rounded-xl shadow-lg p-4 text-sm z-50">
-            <div className="mb-3 text-gray-600">unknownbyte1@gmail.com</div>
+        <div
+          className={`absolute right-0 mt-4 w-64 bg-white rounded-xl shadow-xl p-4 text-sm z-50
+          transform transition-all duration-300 ease-out
+          ${
+            open
+              ? "opacity-100 scale-100 translate-y-0"
+              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+          }`}
+        >
+          <div className="mb-3 text-gray-600 break-all">{profile.email}</div>
 
-            <div
-              onClick={() => {
-                navigate("/profile");
-                setOpen(false);
-              }}
-              className="py-2 cursor-pointer hover:underline"
-            >
-              Profile
-            </div>
-
-            <div
-              onClick={() => {
-                navigate("/settings");
-                setOpen(false);
-              }}
-              className="py-2 cursor-pointer hover:underline"
-            >
-              Settings
-            </div>
+          <div
+            onClick={() => {
+              navigate("/profile");
+              setOpen(false);
+            }}
+            className="py-2 cursor-pointer hover:underline"
+          >
+            Profile
           </div>
-        )}
+
+          <div
+            onClick={() => {
+              navigate("/settings");
+              setOpen(false);
+            }}
+            className="py-2 cursor-pointer hover:underline"
+          >
+            Settings
+          </div>
+        </div>
       </div>
     </div>
   );

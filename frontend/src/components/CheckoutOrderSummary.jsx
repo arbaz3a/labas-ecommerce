@@ -1,25 +1,36 @@
-import React, { useContext, useMemo } from "react";
+import React, { useMemo, useContext } from "react";
 import { shopcontext } from "../context/shopcontext";
 
-function CheckoutOrderSummary() {
+function CheckoutOrderSummary({ cartSnapshot }) {
   const { cartItems, products, currency, delivery_fee } =
     useContext(shopcontext);
 
+  // choose snapshot OR live cart safely
+  const sourceCart = cartSnapshot ?? cartItems ?? {};
+
+  // flatten cart structure → array
   const items = useMemo(() => {
     const arr = [];
-    Object.entries(cartItems).forEach(([id, sizes]) => {
+
+    Object.entries(sourceCart).forEach(([id, sizes]) => {
       Object.entries(sizes).forEach(([size, qty]) => {
         arr.push({ id, size, qty });
       });
     });
-    return arr;
-  }, [cartItems]);
 
-  const subtotal = items.reduce((sum, item) => {
-    const product = products.find((p) => p._id === item.id);
-    if (!product) return sum;
-    return sum + product.price * item.qty;
-  }, 0);
+    return arr;
+  }, [sourceCart]);
+
+  const subtotal = useMemo(() => {
+    let sum = 0;
+
+    items.forEach((item) => {
+      const product = products.find((p) => p._id === item.id);
+      if (product) sum += product.price * item.qty;
+    });
+
+    return sum;
+  }, [items, products]);
 
   const total = subtotal + Number(delivery_fee);
 
@@ -31,19 +42,18 @@ function CheckoutOrderSummary() {
         {items.map((item) => {
           const product = products.find((p) => p._id === item.id);
           if (!product) return null;
+
           return (
             <div
               key={`${item.id}-${item.size}`}
               className="grid grid-cols-[auto_1fr_auto] gap-2 items-start border-b border-gray-200 py-1 sm:py-2"
             >
-              {/* Image */}
               <img
-                src={product.image[0]}
+                src={product.image?.[0]}
                 alt={product.name}
-                className="w-12 h-16 sm:w-12 sm:h-16 object-cover rounded"
+                className="w-12 h-16 object-cover rounded"
               />
 
-              {/* Info */}
               <div className="flex flex-col text-xs">
                 <p className="font-medium text-sm leading-snug wrap-break-word">
                   {product.name}
@@ -64,7 +74,6 @@ function CheckoutOrderSummary() {
                 </div>
               </div>
 
-              {/* Price */}
               <p className="text-xs sm:text-sm font-medium whitespace-nowrap">
                 {currency}
                 {(product.price * item.qty).toFixed(2)}

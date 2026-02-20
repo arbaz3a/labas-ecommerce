@@ -1,11 +1,22 @@
-import React, { useContext } from "react";
+import React, { useEffect, useMemo, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { shopcontext } from "../context/shopcontext";
 import { FaEnvelope, FaWhatsapp } from "react-icons/fa";
 
 function OrderConfirmDetails({ formData }) {
   const navigate = useNavigate();
-  const { currency, delivery_fee } = useContext(shopcontext);
+  const { setCartItems } = useContext(shopcontext);
+
+  // clear cart once on mount
+  useEffect(() => {
+    setCartItems({});
+  }, [setCartItems]);
+
+  // stable confirmation id
+  const confirmationId = useMemo(
+    () => Math.random().toString(36).substring(2, 10).toUpperCase(),
+    [],
+  );
 
   return (
     <div className="space-y-6">
@@ -16,8 +27,7 @@ function OrderConfirmDetails({ formData }) {
 
         <div>
           <p className="text-xs text-gray-500">
-            Confirmation #
-            {Math.random().toString(36).substring(2, 10).toUpperCase()}
+            Confirmation # {confirmationId}
           </p>
 
           <h2 className="font-semibold text-lg">
@@ -26,7 +36,6 @@ function OrderConfirmDetails({ formData }) {
         </div>
       </div>
 
-      {/* Confirmation message */}
       <div className="border rounded-md p-4 bg-gray-50 text-sm">
         <p className="font-medium mb-1">Your order is confirmed</p>
         <p className="text-gray-900 text-xs">
@@ -35,24 +44,20 @@ function OrderConfirmDetails({ formData }) {
         </p>
       </div>
 
-      {/* Order details */}
       <div className="border rounded-md p-4 text-sm space-y-4">
         <h3 className="text-lg font-semibold">Order details</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          {/* Contact info */}
           <div>
             <p className="text-sm font-medium mb-1">Contact information</p>
             <p>{formData.email}</p>
           </div>
 
-          {/* Payment method */}
           <div>
             <p className="text-sm font-medium mb-1">Payment method</p>
             <p>Cash on Delivery (COD)</p>
           </div>
 
-          {/* Shipping address */}
           <div>
             <p className="text-sm font-medium mb-1">Shipping address</p>
             <p>
@@ -66,7 +71,6 @@ function OrderConfirmDetails({ formData }) {
             <p>{formData.phone}</p>
           </div>
 
-          {/* Billing address */}
           <div>
             <p className="text-sm font-medium mb-1">Billing address</p>
             {formData.billingSame ? (
@@ -87,18 +91,8 @@ function OrderConfirmDetails({ formData }) {
             )}
           </div>
         </div>
-
-        {/* Shipping method */}
-        <div className="pt-3 text-xs border-t">
-          <p className="text-sm font-medium mb-1">Shipping method</p>
-          <p>
-            Standard Delivery — {currency}
-            {delivery_fee}
-          </p>
-        </div>
       </div>
 
-      {/* Help & button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 text-gray-700">
           <h2
@@ -107,14 +101,16 @@ function OrderConfirmDetails({ formData }) {
           >
             Need help?
           </h2>
+
           <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=zevylabas@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&to=zevylabas@gmail.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs underline"
+            className="text-xs hover:text-black"
           >
             <FaEnvelope size={16} />
           </a>
+
           <a
             href="https://wa.me/923000000000"
             target="_blank"
@@ -127,7 +123,7 @@ function OrderConfirmDetails({ formData }) {
 
         <button
           onClick={() => navigate("/shop")}
-          className="bg-black text-white px-4 py-3 rounded-md text-xs cursor-pointer"
+          className="bg-black text-white px-4 py-3 rounded-md hover:bg-black/80 text-xs cursor-pointer"
         >
           Continue shopping
         </button>

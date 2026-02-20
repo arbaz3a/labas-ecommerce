@@ -14,11 +14,7 @@ export const ProfileProvider = ({ children }) => {
   const [pendingEmail, setPendingEmail] = useState("");
 
   const [showProfileEdit, setShowProfileEdit] = useState(false);
-  const [profileForm, setProfileForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "unknownbyte1@gmail.com",
-  });
+  const [profileForm, setProfileForm] = useState(profile);
 
   const [addresses, setAddresses] = useState([]);
   const [showAddressModal, setShowAddressModal] = useState(false);

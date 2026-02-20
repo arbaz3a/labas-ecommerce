@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState } from "react";
 import { shopcontext } from "../context/shopcontext";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/frontend_assets/assets";
@@ -7,7 +7,15 @@ import CheckoutOrderSummary from "../components/CheckoutOrderSummary";
 import PopupMessage from "../components/PopupMessage";
 
 function Checkout() {
-  const { currency, delivery_fee } = useContext(shopcontext);
+  const {
+    currency,
+    delivery_fee,
+    cartItems,
+    setCartItems,
+    setOrders,
+    products,
+  } = useContext(shopcontext);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -37,14 +45,25 @@ function Checkout() {
   const [saveEmailInfo, setSaveEmailInfo] = useState(false);
   const [saveDeliveryInfo, setSaveDeliveryInfo] = useState(false);
 
+  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: false });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: false }));
+    }
   };
 
+  // ================= PAYMENT =================
   const handlePayNow = () => {
     let newErrors = {};
 
+    // EMAIL VALIDATION
     if (!formData.email?.trim()) {
       newErrors.email = "Please enter your email address";
     } else {
@@ -54,32 +73,22 @@ function Checkout() {
       }
     }
 
-    const requiredShippingFields = [
-      "city",
-      "firstName",
-      "lastName",
-      "address",
-      "phone",
-    ];
-
-    requiredShippingFields.forEach((field) => {
+    // SHIPPING VALIDATION
+    ["city", "firstName", "lastName", "address", "phone"].forEach((field) => {
       if (!formData[field]?.trim()) {
         newErrors[field] = "This field is required";
       }
     });
 
+    // BILLING VALIDATION
     if (!formData.billingSame) {
-      const requiredBillingFields = [
-        "billingFirstName",
-        "billingLastName",
-        "billingAddress",
-      ];
-
-      requiredBillingFields.forEach((field) => {
-        if (!formData[field]?.trim()) {
-          newErrors[field] = "This field is required";
-        }
-      });
+      ["billingFirstName", "billingLastName", "billingAddress"].forEach(
+        (field) => {
+          if (!formData[field]?.trim()) {
+            newErrors[field] = "This field is required";
+          }
+        },
+      );
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -87,8 +96,35 @@ function Checkout() {
       return;
     }
 
+    // ================= COD ORDER =================
     if (formData.paymentMethod === "cod") {
-      navigate("/orderconfirmation", { state: { formData } });
+      let subtotal = 0;
+
+      Object.entries(cartItems).forEach(([id, sizes]) => {
+        Object.entries(sizes).forEach(([size, qty]) => {
+          const product = products.find((p) => p._id === id);
+          if (product) subtotal += product.price * qty;
+        });
+      });
+
+      const calculatedTotal = subtotal + Number(delivery_fee);
+      const orderItemsSnapshot = structuredClone(cartItems);
+
+      const newOrder = {
+        id: "ORD" + Date.now(),
+        date: new Date(),
+        status: "Processing",
+        items: orderItemsSnapshot,
+        total: calculatedTotal,
+      };
+
+      setOrders((prev) => [...prev, newOrder]);
+      setCartItems({});
+
+      navigate("/orderconfirmation", {
+        state: { formData, orderItems: orderItemsSnapshot },
+      });
+
       return;
     }
 
@@ -109,6 +145,7 @@ function Checkout() {
               >
                 Contact
               </h2>
+
               <p
                 className="text-xs cursor-pointer text-gray-800 underline"
                 onClick={() => navigate("/login")}
@@ -127,6 +164,7 @@ function Checkout() {
                 errors.email ? "border-red-500" : "border-gray-300"
               } rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-500 transition-colors`}
             />
+
             {errors.email && (
               <p className="text-red-500 text-[11px] mt-1">{errors.email}</p>
             )}
@@ -135,12 +173,13 @@ function Checkout() {
               <input
                 type="checkbox"
                 checked={saveEmailInfo}
-                onChange={() => setSaveEmailInfo(!saveEmailInfo)}
+                onChange={() => setSaveEmailInfo((prev) => !prev)}
                 className="cursor-pointer"
               />
               <span>Email me with news and offers</span>
             </label>
           </div>
+
           {/* Delivery */}
           <h2
             className="text-lg font-semibold mb-2 tracking-wider"
@@ -148,6 +187,7 @@ function Checkout() {
           >
             Delivery
           </h2>
+
           <div className="border-gray-300 border rounded-md px-2 py-4">
             <AddressForm
               formData={formData}
@@ -161,12 +201,13 @@ function Checkout() {
               <input
                 type="checkbox"
                 checked={saveDeliveryInfo}
-                onChange={() => setSaveDeliveryInfo(!saveDeliveryInfo)}
+                onChange={() => setSaveDeliveryInfo((prev) => !prev)}
                 className="cursor-pointer"
               />
               <span>Save this information for next time</span>
             </label>
           </div>
+
           {/* Shipping */}
           <div>
             <h2
@@ -175,6 +216,7 @@ function Checkout() {
             >
               Shipping Method
             </h2>
+
             <div className="border border-gray-300 rounded-md p-2 bg-gray-200 flex justify-between mb-6 text-sm">
               <span className="text-gray-800">Standard Delivery</span>
               <span className="font-medium text-gray-800">
@@ -183,7 +225,8 @@ function Checkout() {
               </span>
             </div>
           </div>
-          {/* Payment Options */}
+
+          {/* Payment */}
           <div className="flex flex-col gap-1 mb-3">
             <h2
               className="text-lg font-semibold mb-2 tracking-wider"
@@ -191,11 +234,9 @@ function Checkout() {
             >
               Payment Method
             </h2>
-            {/* Option 1: credit and debit*/}
+
             <label
-              className={`flex items-center gap-3 border border-gray-300 rounded-md p-2 text-gray-700 cursor-pointer transition-colors ${
-                formData.paymentMethod === "card" ? "bg-gray-200" : "bg-white"
-              }`}
+              className={`flex items-center gap-3 border border-gray-300 rounded-md p-2 cursor-pointer ${formData.paymentMethod === "card" ? "bg-gray-200" : "bg-white"}`}
             >
               <input
                 type="radio"
@@ -214,11 +255,9 @@ function Checkout() {
                 />
               </div>
             </label>
-            {/* Option 2: cod */}
+
             <label
-              className={`flex items-center gap-3 border border-gray-300 rounded-md p-2 text-gray-700 cursor-pointer transition-colors ${
-                formData.paymentMethod === "cod" ? "bg-gray-200" : "bg-white"
-              }`}
+              className={`flex items-center gap-3 border border-gray-300 rounded-md p-2 cursor-pointer ${formData.paymentMethod === "cod" ? "bg-gray-200" : "bg-white"}`}
             >
               <input
                 type="radio"
@@ -232,44 +271,41 @@ function Checkout() {
               </span>
             </label>
           </div>
-          {/* Billing Address */}
+
+          {/* Billing */}
           <h2
             className="text-lg font-semibold mb-2 tracking-wider"
             style={{ letterSpacing: "0.5px" }}
           >
             Billing address
           </h2>
-          {/* Option 1: same as shipping */}
+
           <div
-            className={`border border-gray-300 rounded-md p-2 mb-1 text-gray-700 cursor-pointer transition-colors ${
-              formData.billingSame ? "bg-gray-200" : "bg-white"
-            }`}
+            className={`border border-gray-300 rounded-md p-2 mb-1 ${formData.billingSame ? "bg-gray-200" : "bg-white"}`}
           >
             <label className="flex items-center gap-3">
               <input
                 type="radio"
-                name="billingSame"
                 checked={formData.billingSame}
-                onChange={() => setFormData({ ...formData, billingSame: true })}
+                onChange={() =>
+                  setFormData((prev) => ({ ...prev, billingSame: true }))
+                }
               />
               <span className="text-gray-900 text-sm">
                 Same as shipping address
               </span>
             </label>
           </div>
-          {/* Option 2: different billing address */}
+
           <div
-            className={`border border-gray-300 rounded-md py-2 px-1 mb-6 text-gray-700 cursor-pointer transition-colors ${
-              !formData.billingSame ? "bg-gray-100" : "bg-white"
-            }`}
+            className={`border border-gray-300 rounded-md py-2 px-1 mb-6 ${!formData.billingSame ? "bg-gray-100" : "bg-white"}`}
           >
             <label className="flex items-center gap-3 mb-2">
               <input
                 type="radio"
-                name="billingSame"
                 checked={!formData.billingSame}
                 onChange={() =>
-                  setFormData({ ...formData, billingSame: false })
+                  setFormData((prev) => ({ ...prev, billingSame: false }))
                 }
               />
               <span className="text-gray-900 text-sm">
@@ -277,13 +313,8 @@ function Checkout() {
               </span>
             </label>
 
-            {/* Smooth slide-down billing form */}
             <div
-              className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                !formData.billingSame
-                  ? "max-h-250 opacity-100"
-                  : "max-h-0 opacity-0"
-              }`}
+              className={`overflow-hidden transition-all duration-500 ${!formData.billingSame ? "max-h-250 opacity-100" : "max-h-0 opacity-0"}`}
             >
               <AddressForm
                 prefix="billing"
@@ -295,19 +326,19 @@ function Checkout() {
               />
             </div>
           </div>
-          {/* Pay Now / Complete Order */}
+
           <button
             onClick={handlePayNow}
             className="cursor-pointer w-full py-4 bg-black text-white font-semibold rounded-md hover:opacity-90 transition text-sm"
           >
             {formData.paymentMethod === "cod" ? "Complete order" : "Pay now"}
           </button>
-          {/* POPUP Message*/}
+
           <PopupMessage />
         </div>
 
         {/* RIGHT SIDE */}
-        <CheckoutOrderSummary />
+        <CheckoutOrderSummary cartSnapshot={cartItems} />
       </div>
     </div>
   );
