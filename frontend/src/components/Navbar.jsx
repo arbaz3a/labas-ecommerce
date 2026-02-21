@@ -1,165 +1,160 @@
 import React, { useState, useContext } from "react";
 import { assets } from "../assets/frontend_assets/assets";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FiX, FiChevronLeft } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiMenu } from "react-icons/fi";
 import { shopcontext } from "../context/shopcontext";
 import CartDrawer from "../components/CartDrawer";
 
 function Navbar() {
   const { setShowSearch, cartCount } = useContext(shopcontext);
+  const [visible, setVisible] = useState(false);
   const [showCartDrawer, setShowCartDrawer] = useState(false);
   const navigate = useNavigate();
 
-  const [visible, setvisible] = useState(false);
   return (
-    <div className="flex items-center justify-between py-4 px-3 font-medium">
-      <Link to="/">
-        <img src={assets.logo} alt="site_logo" className="w-32" />
-      </Link>
-      <ul className="hidden sm:flex gap-5 text-gray-700">
-        <NavLink to="/" className="flex flex-col text-sm gap-1 items-center">
-          <p>Home</p>
-          <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
-        </NavLink>
-        <NavLink
-          to="/shop"
-          className="flex flex-col text-sm gap-1 items-center"
-        >
-          <p>Shop</p>
-          <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
-        </NavLink>
-        <NavLink
-          to="/contact"
-          className="flex flex-col text-sm gap-1 items-center"
-        >
-          <p>Contact</p>
-          <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
-        </NavLink>
-        <NavLink
-          to="/about"
-          className="flex flex-col text-sm gap-1 items-center"
-        >
-          <p>About</p>
-          <hr className="w-1/2 bg-gray-700 hidden border-none h-[1.3px]" />
-        </NavLink>
-      </ul>
-      <div className="flex gap-4 items-center">
-        {/* mobile search icon */}
-        <img
-          src={assets.search_icon}
-          alt="search_icon"
-          onClick={() => {
-            navigate("/shop");
-            setShowSearch(true);
-          }}
-          className="w-4 cursor-pointer sm:hidden"
-        />
-
-        {/* desktop search bar */}
-        <div
-          onClick={() => {
-            navigate("/shop");
-            setShowSearch(true);
-          }}
-          className="hidden sm:flex items-center border-b border-gray-400 cursor-pointer px-3"
-        >
-          <span className="text-sm tracking-wide text-gray-600">SEARCH</span>
-        </div>
-
-        <img
-          src={assets.profile_icon}
-          onClick={() => navigate("/profile")}
-          className="w-4 cursor-pointer"
-          alt="profile_icon"
-        />
-
-        <div className="relative">
-          <button className="relative" onClick={() => setShowCartDrawer(true)}>
-            <img
-              src={assets.cart_icon}
-              alt="cart_icon"
-              className="w-4 cursor-pointer"
-            />
-            {cartCount > 0 && (
-              <p className="absolute -right-1 cursor-pointer -bottom-1 size-3.5 text-[8px] text-white bg-black rounded-full grid place-items-center">
-                {cartCount}
-              </p>
-            )}
+    <>
+      <div className="flex items-center justify-between py-4 px-3 font-medium relative">
+        <div className="flex items-center gap-1">
+          <button
+            className="sm:hidden p-2 rounded-lg hover:bg-gray-100"
+            onClick={() => setVisible(true)}
+          >
+            <FiMenu className="text-2xl text-gray-700" />
           </button>
+
+          <Link to="/">
+            <img src={assets.logo} alt="site_logo" className="w-32" />
+          </Link>
         </div>
 
-        {showCartDrawer && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setShowCartDrawer(false)}
-            ></div>
-            <CartDrawer onClose={() => setShowCartDrawer(false)} />
-          </>
-        )}
+        <ul className="hidden sm:flex gap-5 text-gray-700">
+          <NavLink to="/" className="flex flex-col text-sm items-center">
+            <p>Home</p>
+          </NavLink>
+
+          <NavLink to="/shop" className="flex flex-col text-sm items-center">
+            <p>Shop</p>
+          </NavLink>
+
+          <NavLink to="/contact" className="flex flex-col text-sm items-center">
+            <p>Contact</p>
+          </NavLink>
+
+          <NavLink to="/about" className="flex flex-col text-sm items-center">
+            <p>About</p>
+          </NavLink>
+        </ul>
+
+        <div className="flex gap-4 items-center">
+          <img
+            src={assets.search_icon}
+            alt="search_icon"
+            onClick={() => {
+              navigate("/shop");
+              setShowSearch(true);
+            }}
+            className="w-4 h-4 cursor-pointer sm:hidden"
+          />
+
+          <div
+            onClick={() => {
+              navigate("/shop");
+              setShowSearch(true);
+            }}
+            className="hidden sm:flex items-center border-b border-gray-400 cursor-pointer px-3"
+          >
+            <span className="text-sm text-gray-600">SEARCH</span>
+          </div>
+
+          <img
+            src={assets.profile_icon}
+            onClick={() => navigate("/profile")}
+            className="w-4 cursor-pointer"
+            alt="profile_icon"
+          />
+
+          <div className="relative">
+            <button onClick={() => setShowCartDrawer(true)}>
+              <img
+                src={assets.cart_icon}
+                alt="cart_icon"
+                className="w-4 cursor-pointer"
+              />
+              {cartCount > 0 && (
+                <p className="absolute -right-1 -bottom-px size-3 text-[8px] text-white bg-black rounded-full grid place-items-center">
+                  {cartCount}
+                </p>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* drawer hamburger */}
+      {showCartDrawer && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setShowCartDrawer(false)}
+          />
+          <CartDrawer onClose={() => setShowCartDrawer(false)} />
+        </>
+      )}
+
       <div
         className={`fixed top-0 right-0 h-screen z-50 bg-white shadow-2xl
         transition-transform duration-300 ease-in-out
-        w-full sm:max-w-sm
+        w-[86%] sm:max-w-sm
         ${visible ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* header */}
         <div className="flex items-center justify-between px-4 py-4 border-b">
           <button
-            onClick={() => setvisible(false)}
-            className="cursor-pointer flex items-center gap-2 text-gray-700 hover:text-gray-900"
+            onClick={() => setVisible(false)}
+            className="flex items-center gap-2 text-gray-700"
           >
             <FiChevronLeft className="text-xl" />
-            <span className="font-medium">Back</span>
+            <span>Back</span>
           </button>
 
           <button
-            onClick={() => setvisible(false)}
-            className="cursor-pointer p-2 rounded-lg hover:bg-gray-100"
-            aria-label="Close menu"
+            onClick={() => setVisible(false)}
+            className="p-2 rounded-lg hover:bg-gray-100"
           >
             <FiX className="text-xl text-gray-700" />
           </button>
         </div>
-        {/* menu bar */}
+
         <div className="flex flex-col px-2 py-4 gap-2">
           <NavLink
             to="/"
-            onClick={() => setvisible(false)}
-            className="px-3 py-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 hover:text-black transition"
+            onClick={() => setVisible(false)}
+            className="px-3 py-3 rounded-lg hover:bg-gray-100"
           >
             Home
           </NavLink>
-
           <NavLink
             to="/shop"
-            onClick={() => setvisible(false)}
-            className="px-3 py-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 hover:text-black transition"
+            onClick={() => setVisible(false)}
+            className="px-3 py-3 rounded-lg hover:bg-gray-100"
           >
             Shop
           </NavLink>
-
           <NavLink
             to="/contact"
-            onClick={() => setvisible(false)}
-            className="px-3 py-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 hover:text-black transition"
+            onClick={() => setVisible(false)}
+            className="px-3 py-3 rounded-lg hover:bg-gray-100"
           >
             Contact
           </NavLink>
-
           <NavLink
             to="/about"
-            onClick={() => setvisible(false)}
-            className="px-3 py-3 rounded-lg text-gray-700 font-medium hover:bg-gray-100 hover:text-black transition"
+            onClick={() => setVisible(false)}
+            className="px-3 py-3 rounded-lg hover:bg-gray-100"
           >
             About
           </NavLink>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
