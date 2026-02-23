@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import ShopContextProvider from "./context/shopcontext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx"; // added
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <BrowserRouter>
-    <ShopContextProvider>
-      <App />
-    </ShopContextProvider>
+    <AuthProvider>
+      <ShopContextProvider>
+        <App />
+      </ShopContextProvider>
+    </AuthProvider>
   </BrowserRouter>,
   // </StrictMode>
 );

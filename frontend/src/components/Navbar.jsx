@@ -3,11 +3,14 @@ import { assets } from "../assets/frontend_assets/assets";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiX, FiChevronLeft, FiMenu } from "react-icons/fi";
 import { shopcontext } from "../context/shopcontext";
+import { AuthContext } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import CartDrawer from "../components/CartDrawer";
+import CartDrawer from "./CartDrawer";
 
-function Navbar() {
+export default function Navbar() {
   const { setShowSearch, cartCount } = useContext(shopcontext);
+  const { user } = useContext(AuthContext);
+
   const [visible, setVisible] = useState(false);
   const [showCartDrawer, setShowCartDrawer] = useState(false);
   const navigate = useNavigate();
@@ -30,19 +33,16 @@ function Navbar() {
 
         <ul className="hidden sm:flex gap-5 text-gray-700">
           <NavLink to="/" className="flex flex-col text-sm items-center">
-            <p>Home</p>
+            Home
           </NavLink>
-
           <NavLink to="/shop" className="flex flex-col text-sm items-center">
-            <p>Shop</p>
+            Shop
           </NavLink>
-
           <NavLink to="/contact" className="flex flex-col text-sm items-center">
-            <p>Contact</p>
+            Contact
           </NavLink>
-
           <NavLink to="/about" className="flex flex-col text-sm items-center">
-            <p>About</p>
+            About
           </NavLink>
         </ul>
 
@@ -67,13 +67,18 @@ function Navbar() {
             <span className="text-sm text-gray-600">SEARCH</span>
           </div>
 
+          {/* Profile Icon */}
           <img
             src={assets.profile_icon}
-            onClick={() => navigate("/profile")}
+            onClick={() => {
+              if (user) navigate("/profile");
+              else navigate("/signin");
+            }}
             className="w-4 cursor-pointer"
             alt="profile_icon"
           />
 
+          {/* Cart */}
           <div className="relative">
             <button onClick={() => setShowCartDrawer(true)}>
               <img
@@ -91,6 +96,7 @@ function Navbar() {
         </div>
       </div>
 
+      {/* Cart Drawer */}
       <AnimatePresence>
         {showCartDrawer && (
           <motion.div
@@ -104,7 +110,6 @@ function Navbar() {
               className="absolute inset-0 bg-black/20"
               onClick={() => setShowCartDrawer(false)}
             />
-
             <CartDrawer
               onClose={() => setShowCartDrawer(false)}
               as={motion.div}
@@ -117,6 +122,7 @@ function Navbar() {
         )}
       </AnimatePresence>
 
+      {/* Mobile menu overlay */}
       <div
         className={`fixed inset-0 bg-black/10 z-40 transition-opacity duration-500 ${
           visible ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -124,6 +130,7 @@ function Navbar() {
         onClick={() => setVisible(false)}
       />
 
+      {/* Mobile menu drawer */}
       <div
         className={`fixed top-0 right-0 h-screen z-50 bg-white shadow-2xl
     w-[86%] sm:max-w-sm
@@ -138,7 +145,6 @@ function Navbar() {
             <FiChevronLeft className="text-xl" />
             <span>Back</span>
           </button>
-
           <button
             onClick={() => setVisible(false)}
             className="p-2 rounded-lg hover:bg-gray-100"
@@ -181,5 +187,3 @@ function Navbar() {
     </>
   );
 }
-
-export default Navbar;
