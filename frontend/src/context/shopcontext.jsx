@@ -1,9 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import { products } from "../assets/frontend_assets/assets";
 
-export const shopcontext = createContext();
+export const ShopContext = createContext();
 
-const ShopContextProvider = (props) => {
+const ShopProvider = (props) => {
   const currency = "Rs ";
   const delivery_fee = "199";
 
@@ -12,8 +12,22 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [cartCount, setCartCount] = useState(0);
   const [orders, setOrders] = useState([]);
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("labas_wishlist")) || [];
+    } catch { return []; }
+  });
+  const toggleWishlist = (productId) => {
+    setWishlist((prev) => {
+      const next = prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId];
+      localStorage.setItem("labas_wishlist", JSON.stringify(next));
+      return next;
+    });
+  };
 
-  // ================= ADD TO CART =================
+  const isInWishlist = (productId) => wishlist.includes(productId);
   const addToCart = (itemID, itemSize, quantity = 1) => {
     if (!itemID || !itemSize) return;
 
@@ -29,9 +43,7 @@ const ShopContextProvider = (props) => {
 
       return cartData;
     });
-  };
-
-  // ================= REMOVE FROM CART =================
+  };
   const removeFromCart = (itemID, itemSize) => {
     setCartItems((prev) => {
       let cartData = structuredClone(prev);
@@ -46,9 +58,7 @@ const ShopContextProvider = (props) => {
 
       return cartData;
     });
-  };
-
-  // ================= CART COUNT =================
+  };
   useEffect(() => {
     let totalCount = 0;
 
@@ -59,9 +69,7 @@ const ShopContextProvider = (props) => {
     });
 
     setCartCount(totalCount);
-  }, [cartItems]);
-
-  // ================= CONTEXT VALUE =================
+  }, [cartItems]);
   const value = {
     products,
     currency,
@@ -77,11 +85,14 @@ const ShopContextProvider = (props) => {
     orders,
     setOrders,
     setCartItems,
+    wishlist,
+    toggleWishlist,
+    isInWishlist,
   };
 
   return (
-    <shopcontext.Provider value={value}>{props.children}</shopcontext.Provider>
+    <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
   );
 };
 
-export default ShopContextProvider;
+export default ShopProvider;

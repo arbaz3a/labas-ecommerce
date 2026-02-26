@@ -19,16 +19,14 @@ function AddressForm({
 
   return (
     <div>
-      {/* City */}
-      {showCity && (
+{showCity && (
         <div className="mb-2">
           <select
             name={getName("city")}
             value={getValue("city")}
             onChange={handleChange}
-            className={`w-full border ${
-              hasError("city") ? "border-red-500" : "border-gray-300"
-            } rounded-md px-3 py-2 text-xs bg-white`}
+            className={`w-full border ${hasError("city") ? "border-red-500" : "border-gray-300"
+              } rounded-md px-3 py-2 text-xs bg-white`}
           >
             <option value="">Select City</option>
             <option>Lahore</option>
@@ -43,9 +41,7 @@ function AddressForm({
           )}
         </div>
       )}
-
-      {/* Country */}
-      <div className="mb-2">
+<div className="mb-2">
         <select
           name={getName("country")}
           value={getValue("country")}
@@ -55,9 +51,7 @@ function AddressForm({
           <option value="Pakistan">Pakistan</option>
         </select>
       </div>
-
-      {/* First + Last Name */}
-      <div className="grid grid-cols-2 md:gap-3 gap-1.5 mb-2">
+<div className="grid grid-cols-2 md:gap-3 gap-1.5 mb-2">
         <div>
           <input
             type="text"
@@ -65,9 +59,8 @@ function AddressForm({
             placeholder="First name"
             value={getValue("firstName")}
             onChange={handleChange}
-            className={`w-full border ${
-              hasError("firstName") ? "border-red-500" : "border-gray-300"
-            } rounded-md px-3 py-2 text-xs bg-white`}
+            className={`w-full border ${hasError("firstName") ? "border-red-500" : "border-gray-300"
+              } rounded-md px-3 py-2 text-xs bg-white`}
           />
           {hasError("firstName") && (
             <p className="text-red-500 text-[11px] mt-1">
@@ -83,9 +76,8 @@ function AddressForm({
             placeholder="Last name"
             value={getValue("lastName")}
             onChange={handleChange}
-            className={`w-full border ${
-              hasError("lastName") ? "border-red-500" : "border-gray-300"
-            } rounded-md px-3 py-2 text-xs bg-white`}
+            className={`w-full border ${hasError("lastName") ? "border-red-500" : "border-gray-300"
+              } rounded-md px-3 py-2 text-xs bg-white`}
           />
           {hasError("lastName") && (
             <p className="text-red-500 text-[11px] mt-1">
@@ -94,18 +86,15 @@ function AddressForm({
           )}
         </div>
       </div>
-
-      {/* Address */}
-      <div className="mb-2">
+<div className="mb-2">
         <input
           type="text"
           name={getName("address")}
           placeholder="Address"
           value={getValue("address")}
           onChange={handleChange}
-          className={`w-full border ${
-            hasError("address") ? "border-red-500" : "border-gray-300"
-          } rounded-md px-3 py-2 text-xs bg-white`}
+          className={`w-full border ${hasError("address") ? "border-red-500" : "border-gray-300"
+            } rounded-md px-3 py-2 text-xs bg-white`}
         />
         {hasError("address") && (
           <p className="text-red-500 text-[11px] mt-1">
@@ -113,18 +102,15 @@ function AddressForm({
           </p>
         )}
       </div>
-
-      {/* Apartment */}
-      <div className="mb-2">
+<div className="mb-2">
         <input
           type="text"
           name={getName("apartment")}
           placeholder="Apartment, suite, etc. (optional)"
           value={getValue("apartment")}
           onChange={handleChange}
-          className={`w-full border ${
-            hasError("apartment") ? "border-red-500" : "border-gray-300"
-          } rounded-md px-3 py-2 text-xs bg-white`}
+          className={`w-full border ${hasError("apartment") ? "border-red-500" : "border-gray-300"
+            } rounded-md px-3 py-2 text-xs bg-white`}
         />
         {hasError("apartment") && (
           <p className="text-red-500 text-[11px] mt-1">
@@ -132,18 +118,15 @@ function AddressForm({
           </p>
         )}
       </div>
-
-      {/* Postal */}
-      <div className="mb-2">
+<div className="mb-2">
         <input
           type="text"
           name={getName("postal")}
           placeholder="Postal code (optional)"
           value={getValue("postal")}
           onChange={handleChange}
-          className={`w-full border ${
-            hasError("postal") ? "border-red-500" : "border-gray-300"
-          } rounded-md px-3 py-2 text-xs bg-white`}
+          className={`w-full border ${hasError("postal") ? "border-red-500" : "border-gray-300"
+            } rounded-md px-3 py-2 text-xs bg-white`}
         />
         {hasError("postal") && (
           <p className="text-red-500 text-[11px] mt-1">
@@ -151,22 +134,26 @@ function AddressForm({
           </p>
         )}
       </div>
-
-      {/* Phone */}
-      <div className="mb-2">
-        <input
-          type="text"
-          name={getName("phone")}
-          placeholder={phoneRequired ? "Phone" : "Phone (optional)"}
-          value={getValue("phone")}
-          onChange={handleChange}
-          className={`w-full border ${
-            hasError("phone") ? "border-red-500" : "border-gray-300"
-          } rounded-md px-3 py-2 text-xs bg-white`}
-        />
+<div className="mb-2">
+        <div
+          className={`flex items-center border ${hasError("phone") ? "border-red-500" : "border-gray-300"
+            } rounded-md overflow-hidden bg-white`}
+        >
+          <span className="flex items-center gap-1 px-3 text-xs text-gray-500 bg-gray-50 border-r border-gray-300 h-full py-2 select-none flex-shrink-0">
+            🇵🇰 +92
+          </span>
+          <input
+            type="tel"
+            name={getName("phone")}
+            placeholder={phoneRequired ? "3XXXXXXXXX" : "3XXXXXXXXX (optional)"}
+            value={getValue("phone")}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-xs bg-white outline-none"
+          />
+        </div>
         {hasError("phone") && (
           <p className="text-red-500 text-[11px] mt-1">
-            Please enter your phone number
+            {errors[getName("phone")]}
           </p>
         )}
       </div>

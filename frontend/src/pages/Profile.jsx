@@ -1,239 +1,151 @@
-import React, { useContext } from "react";
-import { FiEdit2 } from "react-icons/fi";
-import ProfileEditModal from "../components/ProfileEditModel";
-import VerifyEmailModal from "../components/VerifyEmailModal";
-import AddressFormModal from "../components/AddressFormModel";
-import { ProfileContext } from "../context/ProfileContext";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { FiLogOut, FiPackage } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 function Profile() {
-  const {
-    profile,
-    setProfile,
-    showVerifyModal,
-    setShowVerifyModal,
-    verificationCode,
-    setVerificationCode,
-    pendingEmail,
-    setPendingEmail,
-    showProfileEdit,
-    setShowProfileEdit,
-    profileForm,
-    setProfileForm,
-    addresses,
-    setAddresses,
-    showAddressModal,
-    setShowAddressModal,
-    editingIndex,
-    setEditingIndex,
-    formData,
-    setFormData,
-    errors,
-    setErrors,
-    emailError,
-    setEmailError,
-  } = useContext(ProfileContext);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    fullName: user?.name || "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+  });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleProfileChange = (e) => {
-    setProfileForm({ ...profileForm, [e.target.name]: e.target.value });
+  const handleSave = (e) => {
+    e.preventDefault();
+    toast.dismiss();
+    toast("Profile saved successfully", { type: "success", toastId: "profile-saved" });
   };
 
-  const validateAddress = () => {
-    let newErrors = {};
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "address",
-      "city",
-      "phone",
-    ];
-    requiredFields.forEach((field) => {
-      if (!formData[field]) newErrors[field] = true;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const saveAddress = () => {
-    if (!validateAddress()) return;
-
-    if (editingIndex !== null) {
-      const updated = [...addresses];
-      updated[editingIndex] = formData;
-      setAddresses(updated);
-    } else {
-      setAddresses([...addresses, formData]);
-    }
-
-    setShowAddressModal(false);
-    setFormData({});
-    setEditingIndex(null);
-  };
-
-  const editAddress = (index) => {
-    setFormData(addresses[index]);
-    setEditingIndex(index);
-    setShowAddressModal(true);
-  };
-
-  const deleteAddress = () => {
-    if (editingIndex === null) return;
-    const updated = addresses.filter((_, index) => index !== editingIndex);
-    setAddresses(updated);
-    setShowAddressModal(false);
-    setEditingIndex(null);
-    setFormData({});
-  };
-
-  const saveProfile = () => {
-    const trimmedEmail = profileForm.email?.trim();
-
-    if (!trimmedEmail) {
-      setEmailError("Please enter your email address");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      setEmailError("Please enter a valid email address");
-      return;
-    }
-
-    setEmailError("");
-
-    if (trimmedEmail !== profile.email) {
-      setPendingEmail(trimmedEmail);
-      setShowVerifyModal(true);
-      return;
-    }
-
-    setProfile({
-      ...profile,
-      firstName: profileForm.firstName,
-      lastName: profileForm.lastName,
-    });
-
-    setShowProfileEdit(false);
-  };
-
-  const confirmEmailChange = () => {
-    setProfile({
-      ...profile,
-      firstName: profileForm.firstName,
-      lastName: profileForm.lastName,
-      email: pendingEmail,
-    });
-    setShowVerifyModal(false);
-    setShowProfileEdit(false);
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
   };
 
   return (
-    <div className="px-6 py-10 relative bg-[#f6f6f6]">
-      <h2 className="text-lg font-medium mb-8">Profile</h2>
-
-      <div className="bg-white rounded-xl p-5 mb-6 shadow-sm">
-        <div className="mb-6">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-black">Name</span>
-            <FiEdit2
-              onClick={() => {
-                setProfileForm({
-                  firstName: profile.firstName,
-                  lastName: profile.lastName,
-                  email: profile.email,
-                });
-                setShowProfileEdit(true);
-              }}
-              className="cursor-pointer text-gray-500"
-              size={14}
-            />
-          </div>
-          <p className="mt-2 text-xs text-gray-900">
-            {profile.firstName} {profile.lastName}
-          </p>
+    <div className="page-wrapper py-10 max-w-2xl">
+<div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-black">
+          My Profile
+        </h1>
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-black transition cursor-pointer"
+        >
+          <FiLogOut className="w-4 h-4" />
+          Sign Out
+        </button>
+      </div>
+<p className="text-sm text-gray-500 mb-5">{user?.email || "user@example.com"}</p>
+<button
+        onClick={() => navigate("/orders")}
+        className="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 text-[11px] tracking-[0.15em] uppercase font-medium text-black hover:bg-gray-50 transition cursor-pointer mb-8"
+      >
+        <FiPackage className="w-4 h-4" />
+        My Orders
+      </button>
+<form onSubmit={handleSave} className="flex flex-col gap-5">
+        <div>
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            Full Name
+          </label>
+          <input
+            type="text"
+            name="fullName"
+            value={form.fullName}
+            onChange={handleChange}
+            placeholder="Your full name"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
+          />
         </div>
 
         <div>
-          <p className="text-sm text-black">Email</p>
-          <p className="mt-2 text-xs text-gray-900">{profile.email}</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl p-5 shadow-sm">
-        <div className="flex items-center gap-4 mb-4">
-          <h3 className="font-semibold text-[13px]">Addresses</h3>
-          <button
-            onClick={() => {
-              setFormData({});
-              setEditingIndex(null);
-              setShowAddressModal(true);
-            }}
-            className="text-xs cursor-pointer font-medium hover:underline"
-          >
-            + Add
-          </button>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4 text-xs text-gray-900">
-          {addresses.length === 0 && (
-            <p className="text-gray-400 text-xs">No address added yet.</p>
-          )}
-
-          {addresses.map((addr, index) => (
-            <div key={index} className="relative bg-gray-50 p-3">
-              <FiEdit2
-                onClick={() => editAddress(index)}
-                className="absolute right-3 top-3 text-gray-500 cursor-pointer"
-                size={13}
-              />
-              <p>
-                {addr.firstName} {addr.lastName}
-              </p>
-              <p>{addr.address}</p>
-              <p>{addr.city}</p>
-              <p>{addr.postal}</p>
-              <p>{addr.country}</p>
-              <p>{addr.phone}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {showVerifyModal ? (
-        <VerifyEmailModal
-          originalEmail={profile.email}
-          verificationCode={verificationCode}
-          setVerificationCode={setVerificationCode}
-          confirmEmailChange={confirmEmailChange}
-          setShowVerifyModal={setShowVerifyModal}
-        />
-      ) : (
-        showProfileEdit && (
-          <ProfileEditModal
-            profileForm={profileForm}
-            handleProfileChange={handleProfileChange}
-            saveProfile={saveProfile}
-            setShowProfileEdit={setShowProfileEdit}
-            emailError={emailError}
-            setEmailError={setEmailError}
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            Phone
+          </label>
+          <input
+            type="tel"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="e.g. +92 300 1234567"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
           />
-        )
-      )}
+        </div>
 
-      {showAddressModal && (
-        <AddressFormModal
-          formData={formData}
-          handleChange={handleChange}
-          errors={errors}
-          setShowAddressModal={setShowAddressModal}
-          saveAddress={saveAddress}
-          deleteAddress={deleteAddress}
-          editingIndex={editingIndex}
-        />
-      )}
+        <div>
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            Address
+          </label>
+          <input
+            type="text"
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+            placeholder="Street address"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            City
+          </label>
+          <input
+            type="text"
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+            placeholder="e.g. Lahore"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            State
+          </label>
+          <input
+            type="text"
+            name="state"
+            value={form.state}
+            onChange={handleChange}
+            placeholder="e.g. Punjab"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold tracking-[0.15em] uppercase mb-2 text-black">
+            Zip Code
+          </label>
+          <input
+            type="text"
+            name="zipCode"
+            value={form.zipCode}
+            onChange={handleChange}
+            placeholder="e.g. 54000"
+            className="w-full px-4 py-3 bg-[#F5F4F0] text-sm text-black border-none outline-none placeholder:text-gray-400"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3.5 bg-black text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:opacity-90 transition cursor-pointer mt-2"
+        >
+          Save Profile
+        </button>
+      </form>
     </div>
   );
 }

@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { shopcontext } from "../context/shopcontext";
-import { FiTrash2, FiX } from "react-icons/fi";
+import React, { useContext, useEffect } from "react";
+import { ShopContext } from "../context/ShopContext";
+import { FiTrash2, FiX, FiShoppingBag } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
@@ -13,10 +13,16 @@ function CartDrawer({ onClose }) {
     delivery_fee,
     removeFromCart,
     addToCart,
-  } = useContext(shopcontext);
+  } = useContext(ShopContext);
   const navigate = useNavigate();
 
-  // flatten cart for display: [{ id, size, qty }]
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   const items = [];
   Object.entries(cartItems).forEach(([id, sizes]) => {
     Object.entries(sizes).forEach(([size, qty]) => {
@@ -37,99 +43,110 @@ function CartDrawer({ onClose }) {
       initial={{ x: "100%" }}
       animate={{ x: 0 }}
       exit={{ x: "100%" }}
-      transition={{ type: "tween", duration: 0.3 }}
-      className="fixed top-0 right-0 h-full z-50 bg-white shadow-2xl flex flex-col
-                 w-[90vw] sm:max-w-sm font-sans tracking-wider"
+      transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
+      className="fixed top-0 right-0 h-full z-50 bg-white flex flex-col
+                 w-[92vw] sm:max-w-[420px] font-sans"
+      style={{ boxShadow: "-8px 0 30px rgba(0,0,0,0.08)" }}
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold tracking-widest">Shopping Cart</h2>
+      <div className="flex items-center justify-between px-6 h-[60px] border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center gap-2.5">
+          <FiShoppingBag className="w-[18px] h-[18px] text-gray-800" />
+          <h2 className="text-[13px] font-semibold tracking-[0.2em] uppercase text-black">
+            Your Bag
+          </h2>
+          {items.length > 0 && (
+            <span className="text-[11px] text-gray-400 font-medium">
+              ({items.length} {items.length === 1 ? "item" : "items"})
+            </span>
+          )}
+        </div>
         <button
           onClick={onClose}
-          className="cursor-pointer p-2 rounded-lg hover:bg-gray-100"
+          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer"
+          aria-label="Close cart"
         >
-          <FiX size={22} />
+          <FiX className="w-5 h-5 text-gray-500" />
         </button>
       </div>
 
-      {/* cart items */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div className="flex-1 overflow-y-auto px-6 py-5 scrollbar-hide">
         <AnimatePresence>
           {items.length === 0 ? (
             <motion.div
               key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="text-center text-gray-500 mt-12 text-base tracking-wider"
+              className="flex flex-col items-center justify-center h-full text-center"
             >
-              Your cart is empty
+              <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mb-4">
+                <FiShoppingBag className="w-7 h-7 text-gray-300" />
+              </div>
+              <p className="text-sm font-medium text-gray-800 mb-1">Your bag is empty</p>
+              <p className="text-xs text-gray-400">Add items to get started</p>
             </motion.div>
           ) : (
-            items.map((item) => {
+            items.map((item, index) => {
               const product = products.find((p) => p._id === item.id);
               if (!product) return null;
 
               return (
                 <motion.div
                   key={`${item.id}-${item.size}`}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex gap-3 items-start border-b border-gray-200 pb-4 mb-4"
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.25, delay: index * 0.03 }}
+                  className="flex gap-4 items-start pb-5 mb-5 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0"
                 >
-                  <img
-                    src={product.image[0]}
-                    alt={product.name}
-                    className="w-19 h-23 object-cover rounded"
-                  />
-
-                  <div className="flex-1 flex flex-col gap-2">
-                    <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
-                      <div>
-                        <h3 className="text-sm font-semibold tracking-wider">
+                  <div className="w-[72px] h-[90px] rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
+                    <img
+                      src={product.image[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 flex flex-col gap-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h3 className="text-[13px] font-medium text-gray-900 leading-tight truncate">
                           {product.name}
                         </h3>
-                        <p className="text-xs text-gray-600 tracking-wider mt-0.5">
-                          <span className="text-gray-900 font-bold mr-1 text-xs">
-                            Size:
-                          </span>
-                          {item.size}
+                        <p className="text-[11px] text-gray-400 mt-0.5">
+                          Size: <span className="text-gray-600">{item.size}</span>
                         </p>
                       </div>
 
                       <button
                         onClick={() => removeFromCart(item.id, item.size)}
-                        className="text-gray-600 hover:text-red-600 transition cursor-pointer"
+                        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
+                        aria-label="Remove item"
                       >
-                        <FiTrash2 size={18} />
+                        <FiTrash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="inline-flex items-center gap-1">
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="inline-flex items-center border border-gray-200 rounded-full overflow-hidden">
                         <button
-                          className="w-6 h-6 flex items-center justify-center border border-gray-100 hover:bg-gray-100 transition cursor-pointer text-gray-600"
+                          className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition cursor-pointer text-sm"
                           onClick={() => addToCart(item.id, item.size, -1)}
                         >
                           −
                         </button>
-
-                        <span className="min-w-5 text-center font-normal text-sm select-none">
+                        <span className="w-8 text-center text-[13px] font-medium text-gray-900 select-none">
                           {item.qty}
                         </span>
-
                         <button
-                          className="w-6 h-6 flex items-center justify-center border border-gray-100 hover:bg-gray-100 transition cursor-pointer text-gray-600"
+                          className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition cursor-pointer text-sm"
                           onClick={() => addToCart(item.id, item.size, 1)}
                         >
                           +
                         </button>
                       </div>
-
-                      <p className="text-xs font-semibold tracking-wider">
+                      <p className="text-[13px] font-semibold text-gray-900">
                         {currency}
-                        {(product.price * item.qty).toFixed(2)}
+                        {(product.price * item.qty).toLocaleString("en-PK")}
                       </p>
                     </div>
                   </div>
@@ -139,8 +156,6 @@ function CartDrawer({ onClose }) {
           )}
         </AnimatePresence>
       </div>
-
-      {/* ORDER SUMMARY */}
       {items.length > 0 && (
         <OrderSummary
           items={items}

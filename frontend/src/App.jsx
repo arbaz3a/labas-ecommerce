@@ -4,25 +4,32 @@ import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Shop from "./pages/Shop.jsx";
 import Contact from "./pages/Contact.jsx";
-import Signin from "./pages/Signin.jsx";
-import Signup from "./pages/Signup.jsx";
+import SignIn from "./pages/SignIn.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-import Product from "./pages/Product.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
+import Wishlist from "./pages/Wishlist.jsx";
 import Profile from "./pages/Profile.jsx";
-import ProfileLayout from "./layout/ProfileLayout.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Orders from "./pages/Orders.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
-import Settings from "./pages/Settings.jsx";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "./context/AuthContext.jsx";
 
-// PrivateRoute component
 const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!user) return <Navigate to="/signin" />;
   return children;
 };
@@ -30,21 +37,15 @@ const PrivateRoute = ({ children }) => {
 function App() {
   const location = useLocation();
 
-  // Hide navbar/footer on auth pages AND profile/order/settings pages
   const hideLayout = [
     "/signin",
     "/signup",
     "/forgot-password",
-    "/profile",
-    "/orders",
-    "/settings",
   ].includes(location.pathname);
 
   return (
-    <div className="md:px-21 sm:px-16 px-11 py-3">
+    <div>
       {!hideLayout && <Navbar />}
-
-      {/* Toastify */}
       <ToastContainer
         position="top-left"
         autoClose={1800}
@@ -62,22 +63,21 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/:category" element={<Shop />} />
+        <Route path="/shop/:category/:subcategory" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/product/:productID" element={<Product />} />
-
-        {/* Protected Routes */}
+        <Route path="/product/:productID" element={<ProductDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route
           path="/profile"
           element={
             <PrivateRoute>
-              <ProfileLayout>
-                <Profile />
-              </ProfileLayout>
+              <Profile />
             </PrivateRoute>
           }
         />
@@ -85,19 +85,7 @@ function App() {
           path="/orders"
           element={
             <PrivateRoute>
-              <ProfileLayout>
-                <Orders />
-              </ProfileLayout>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <PrivateRoute>
-              <ProfileLayout>
-                <Settings />
-              </ProfileLayout>
+              <Orders />
             </PrivateRoute>
           }
         />

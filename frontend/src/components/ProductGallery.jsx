@@ -1,7 +1,7 @@
 import React from "react";
 import { FiChevronUp, FiChevronDown, FiZoomIn } from "react-icons/fi";
 
-function ProductImageGallery({
+function ProductGallery({
   productdata,
   mainImage,
   imageIndex,
@@ -15,8 +15,7 @@ function ProductImageGallery({
 }) {
   return (
     <>
-      {/* left images desktop thumbnails portion */}
-      <div className="hidden md:flex flex-col items-center gap-2">
+<div className="hidden md:flex flex-col items-center gap-2">
         <button onClick={prevImage} className="cursor-pointer my-1">
           <FiChevronUp size={22} />
         </button>
@@ -42,9 +41,7 @@ function ProductImageGallery({
           <FiChevronDown size={22} />
         </button>
       </div>
-
-      {/* main product image */}
-      <div className="w-full md:flex-1 flex justify-center items-center">
+<div className="w-full md:flex-1 flex justify-center items-center">
         <div className="relative max-w-120 w-full">
           <img
             src={mainImage}
@@ -53,9 +50,7 @@ function ProductImageGallery({
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           />
-
-          {/* zoom icon*/}
-          <button
+<button
             onClick={() => setIsFullscreen(true)}
             className="absolute bottom-3 right-3 bg-white p-2 rounded-full shadow-md cursor-pointer"
           >
@@ -63,9 +58,7 @@ function ProductImageGallery({
           </button>
         </div>
       </div>
-
-      {/* dots below main display image mobile version*/}
-      <div className="md:hidden flex justify-center mx-auto my-2 gap-2">
+<div className="md:hidden flex justify-center mx-auto my-2 gap-2">
         {productdata.image.map((_, idx) => (
           <div
             key={idx}
@@ -79,4 +72,4 @@ function ProductImageGallery({
   );
 }
 
-export default ProductImageGallery;
+export default ProductGallery;

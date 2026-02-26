@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { shopcontext } from "../context/shopcontext";
+import { ShopContext } from "../context/ShopContext";
 import ProductFullscreen from "../components/ProductFullscreen";
-import ProductInfoDetails from "../components/ProductInfoDetails";
-import ProductImageGallery from "../components/ProductImageGallery";
+import ProductInfo from "../components/ProductInfo";
+import ProductGallery from "../components/ProductGallery";
 import RelatedProducts from "../components/RelatedProducts";
 
-function Product() {
+function ProductDetails() {
   const { productID } = useParams();
-  const { products, currency } = useContext(shopcontext);
+  const { products, currency } = useContext(ShopContext);
 
   const [productdata, setproductdata] = useState(null);
   const [mainImage, setMainImage] = useState("");
@@ -50,7 +50,6 @@ function Product() {
     setMainImage(productdata.image[next]);
   };
 
-  // swipe handlers for main image mobile version + fullscreen (mobile & touch devices)
   let touchStartX = 0;
 
   const handleTouchStart = (e) => {
@@ -66,8 +65,7 @@ function Product() {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-8 md:gap-10 items-start">
-        {/* left images + display image + dots image representation */}
-        <ProductImageGallery
+        <ProductGallery
           productdata={productdata}
           mainImage={mainImage}
           imageIndex={imageIndex}
@@ -79,8 +77,6 @@ function Product() {
           handleTouchEnd={handleTouchEnd}
           setIsFullscreen={setIsFullscreen}
         />
-
-        {/* after zoom fullscreen section*/}
         <ProductFullscreen
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
@@ -91,9 +87,7 @@ function Product() {
           handleTouchStart={handleTouchStart}
           handleTouchEnd={handleTouchEnd}
         />
-
-        {/* right product info details section*/}
-        <ProductInfoDetails
+        <ProductInfo
           productdata={productdata}
           currency={currency}
           selectedSize={selectedSize}
@@ -111,4 +105,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default ProductDetails;

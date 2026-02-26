@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function PopupMessage() {
+function PolicyLinks() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
@@ -9,15 +9,15 @@ function PopupMessage() {
     {
       name: "Terms & Conditions",
       message: `
-        By accessing and using <strong>Zevylabas</strong>, you agree to the following terms and conditions. Please read them carefully before placing an order.
+        By accessing and using <strong>LABAS</strong>, you agree to the following terms and conditions. Please read them carefully before placing an order.
         <ul>
           <li>You must be of <strong>legal age</strong> to make a purchase.</li>
           <li>Products must not be used for any <strong>illegal or unauthorized purpose</strong>.</li>
           <li>Prices and product availability may change <strong>without prior notice</strong>.</li>
           <li>We reserve the right to <strong>refuse or cancel orders</strong> if necessary.</li>
           <li>Product colors may slightly vary due to screen settings.</li>
-          <li>All website content belongs to <strong>Zevylabas</strong> and cannot be copied.</li>
-          <li>Products and services are provided <strong>“as is”</strong> without warranties.</li>
+          <li>All website content belongs to <strong>LABAS</strong> and cannot be copied.</li>
+          <li>Products and services are provided <strong>"as is"</strong> without warranties.</li>
           <li>We are not liable for <strong>indirect or consequential damages</strong>.</li>
           <li>These terms are governed by the <strong>laws of Pakistan</strong>.</li>
         </ul>
@@ -27,7 +27,7 @@ function PopupMessage() {
     {
       name: "Shipping",
       message: `
-        <strong>Zevylabas</strong> delivers orders across Pakistan within <strong>3–5 working days</strong>, depending on your location. 
+        <strong>LABAS</strong> delivers orders across Pakistan within <strong>3–5 working days</strong>, depending on your location. 
         Orders are not processed on Sundays or public holidays, and delivery may be delayed during peak seasons. 
         Please ensure accurate shipping details, as we are not responsible for delays caused by incorrect information.
       `,
@@ -35,7 +35,7 @@ function PopupMessage() {
     {
       name: "Refund Policy",
       message: `
-        All purchases at <strong>Zevylabas</strong> are final. Please review our exchange policy below.
+        All purchases at <strong>LABAS</strong> are final. Please review our exchange policy below.
         <ul>
           <li>We do <strong>not offer refunds</strong> under any circumstances.</li>
           <li>Exchanges are allowed within <strong>7 days</strong> of purchase.</li>
@@ -47,13 +47,13 @@ function PopupMessage() {
           <li>Discounted items are exchanged at the <strong>current price</strong>.</li>
           <li>Exchange processing may take up to <strong>3 weeks</strong>.</li>
         </ul>
-        To request an exchange, contact <strong>contact@zevylabas.com</strong>.
+        To request an exchange, contact <strong>contact@labas.pk</strong>.
       `,
     },
     {
       name: "Privacy Policy",
       message: `
-        <strong>Zevylabas</strong> respects your privacy and is committed to protecting your personal information.
+        <strong>LABAS</strong> respects your privacy and is committed to protecting your personal information.
         <ul>
           <li>We collect information such as name, email, and shipping details.</li>
           <li>Payment details are handled via <strong>secure processors</strong>.</li>
@@ -75,10 +75,10 @@ function PopupMessage() {
           <li>Customer support hours: <strong>Monday to Saturday, 10am–6pm</strong>.</li>
           <li>Response time: <strong>24–48 hours</strong>.</li>
           <li>Please provide your <strong>order number</strong> for faster service.</li>
-          <li>Email us at <strong>contact@zevylabas.com</strong>.</li>
+          <li>Email us at <strong>contact@labas.pk</strong>.</li>
           <li>Call us at <strong>+92 3000-000000</strong>.</li>
         </ul>
-        Thank you for choosing <strong>Zevylabas</strong>.
+        Thank you for choosing <strong>LABAS</strong>.
       `,
     },
   ];
@@ -93,8 +93,7 @@ function PopupMessage() {
 
   return (
     <>
-      {/* Links */}
-      <div className="flex justify-center gap-5 mt-1 flex-wrap text-xs text-gray-500">
+<div className="flex justify-center gap-5 mt-4 flex-wrap text-xs text-gray-500">
         {popupmessages.map((link, index) => (
           <a
             key={index}
@@ -109,9 +108,7 @@ function PopupMessage() {
           </a>
         ))}
       </div>
-
-      {/* Popup */}
-      {showPopup && (
+{showPopup && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm transition-opacity duration-300"
           onClick={handleClose}
@@ -141,4 +138,4 @@ function PopupMessage() {
   );
 }
 
-export default PopupMessage;
+export default PolicyLinks;

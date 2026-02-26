@@ -3,56 +3,31 @@ import { assets } from "../assets/frontend_assets/assets";
 
 function OurPolicy() {
   return (
-    <div className="my-20 px-4 sm:px-10">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-
-        {/* Exchange Policy */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition">
-          <img
-            src={assets.return_product_icon}
-            alt="Exchange Policy"
-            className="w-14 mx-auto mb-4"
-          />
-          <h3 className="text-lg font-semibold text-gray-800">
-            Easy Exchange
-          </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Hassle-free exchange policy within 7 days of purchase for a smooth
-            shopping experience.
+    <div className="page-wrapper py-16">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="p-8 rounded-xl text-center bg-gray-50 border border-gray-100">
+          <img src={assets.return_product_icon} alt="Exchange Policy" className="w-12 mx-auto mb-4 opacity-60" />
+          <h3 className="text-lg font-semibold text-black">Easy Exchange</h3>
+          <p className="mt-2 text-sm leading-relaxed text-gray-500">
+            Hassle-free exchange policy within 7 days of purchase.
           </p>
         </div>
 
-        {/* Quality Policy */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition">
-          <img
-            src={assets.quality_policy_icon}
-            alt="Quality Assurance"
-            className="w-14 mx-auto mb-4"
-          />
-          <h3 className="text-lg font-semibold text-gray-800">
-            Premium Quality
-          </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Every product is carefully checked to ensure top-notch quality and
-            durability.
+        <div className="p-8 rounded-xl text-center bg-gray-50 border border-gray-100">
+          <img src={assets.quality_policy_icon} alt="Quality" className="w-12 mx-auto mb-4 opacity-60" />
+          <h3 className="text-lg font-semibold text-black">Premium Quality</h3>
+          <p className="mt-2 text-sm leading-relaxed text-gray-500">
+            Every product is carefully checked for top-notch quality.
           </p>
         </div>
 
-        {/* Support Policy */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition">
-          <img
-            src={assets.support_img}
-            alt="Customer Support"
-            className="w-14 mx-auto mb-4"
-          />
-          <h3 className="text-lg font-semibold text-gray-800">
-            24/7 Support
-          </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Our support team is always available to help you anytime, anywhere.
+        <div className="p-8 rounded-xl text-center bg-gray-50 border border-gray-100">
+          <img src={assets.support_img} alt="Support" className="w-12 mx-auto mb-4 opacity-60" />
+          <h3 className="text-lg font-semibold text-black">24/7 Support</h3>
+          <p className="mt-2 text-sm leading-relaxed text-gray-500">
+            Our support team is always available to help you.
           </p>
         </div>
-
       </div>
     </div>
   );

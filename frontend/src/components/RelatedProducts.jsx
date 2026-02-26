@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { shopcontext } from "../context/shopcontext";
+import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 
 function RelatedProducts({ currentProduct }) {
-  const { products, currency } = useContext(shopcontext);
+  const { products, currency } = useContext(ShopContext);
   const [related, setRelated] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function RelatedProducts({ currentProduct }) {
   if (related.length === 0) return null;
 
   return (
-    <div className="mt-12">
+    <div className="mt-12 mx-6 mb-3">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-left text-lg md:text-xl font-light tracking-widest">
           You may also like

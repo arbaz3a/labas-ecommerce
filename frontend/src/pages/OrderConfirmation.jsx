@@ -1,32 +1,34 @@
 import { useLocation } from "react-router-dom";
-import OrderConfirmDetails from "../components/OrderConfirmDetails";
-import CheckoutOrderSummary from "../components/CheckoutOrderSummary";
-import PopupMessage from "../components/PopupMessage";
+import OrderConfirmationDetails from "../components/OrderConfirmationDetails";
+import CheckoutSummary from "../components/CheckoutSummary";
 import { useContext } from "react";
-import { shopcontext } from "../context/shopcontext";
+import { ShopContext } from "../context/ShopContext";
 
 function OrderConfirmation() {
   const { state } = useLocation();
-  const { products } = useContext(shopcontext);
+  const { products } = useContext(ShopContext);
 
   const formData = state?.formData || {};
   const orderItems = state?.orderItems || {};
 
   return (
-    <div className="relative min-h-screen bg-[#f5f5f5] font-sans tracking-wider">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-4 px-5 py-10">
-        {/* LEFT */}
-        <div className="bg-white p-10 rounded-lg shadow-sm space-y-6 relative">
-          <OrderConfirmDetails
-            formData={formData}
-            orderItems={orderItems}
-            products={products}
-          />
-          <PopupMessage />
+    <div className="min-h-screen bg-white">
+<div className="bg-green-50 border-b border-green-100">
+        <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center text-[11px] font-bold">✓</span>
+          <span className="text-[12px] tracking-[0.1em] font-medium text-green-700">
+            Order Confirmed
+          </span>
         </div>
+      </div>
 
-        {/* RIGHT */}
-        <CheckoutOrderSummary cartSnapshot={orderItems} />
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-0">
+<div className="px-6 sm:px-10 lg:px-14 py-10 lg:py-12">
+          <OrderConfirmationDetails formData={formData} orderItems={orderItems} products={products} />
+        </div>
+<div className="bg-gray-50 lg:border-l border-t lg:border-t-0 border-gray-100 px-6 sm:px-10 lg:px-14 py-10 lg:py-12">
+          <CheckoutSummary cartSnapshot={orderItems} />
+        </div>
       </div>
     </div>
   );

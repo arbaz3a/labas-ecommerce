@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 
 function OrderSummary({
   items,
@@ -12,46 +13,44 @@ function OrderSummary({
   const navigate = useNavigate();
 
   return (
-    <div className="px-6 py-4 border-t text-xs tracking-wider">
-      <div className="flex justify-between items-center mb-2">
-        <span className="font-medium">
-          Subtotal <span className="px-1">&middot;</span>{items.length} items
-        </span>
+    <div className="border-t border-gray-100 px-6 py-5 flex-shrink-0 bg-white">
+<div className="space-y-2 mb-3">
+        <div className="flex justify-between items-center">
+          <span className="text-[13px] text-gray-500">
+            Subtotal ({items.length} {items.length === 1 ? "item" : "items"})
+          </span>
+          <span className="text-[13px] font-medium text-gray-900">
+            {currency}
+            {subtotal.toLocaleString("en-PK")}
+          </span>
+        </div>
 
-        <span className="w-20 text-left font-medium">
-          {currency}
-          {subtotal.toFixed(2)}
-        </span>
+        <div className="flex justify-between items-center">
+          <span className="text-[13px] text-gray-500">Delivery</span>
+          <span className="text-[13px] font-medium text-gray-900">
+            {currency}
+            {Number(delivery_fee).toLocaleString("en-PK")}
+          </span>
+        </div>
       </div>
 
-      <div className="flex justify-between items-center mb-2">
-        <span className="font-medium">Delivery</span>
-
-        <span className="w-20 text-left font-medium">
+      <div className="h-px bg-gray-100 my-3" />
+<div className="flex justify-between items-center mb-5">
+        <span className="text-sm font-semibold text-black">Total</span>
+        <span className="text-sm font-semibold text-black">
           {currency}
-          {Number(delivery_fee).toFixed(2)}
+          {total.toLocaleString("en-PK")}
         </span>
       </div>
-
-      <div className="h-px bg-gray-200 my-2" />
-
-      <div className="flex justify-between items-center text-sm font-semibold">
-        <span>Total</span>
-
-        <span className="w-20 text-left">
-          {currency}
-          {total.toFixed(2)}
-        </span>
-      </div>
-
-      <button
+<button
         onClick={() => {
           onClose();
           navigate("/checkout");
         }}
-        className="w-full mt-4 py-3 bg-black cursor-pointer text-white text-xs tracking-widest hover:opacity-90 transition"
+        className="w-full h-12 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase rounded-full hover:bg-gray-900 transition-colors cursor-pointer flex items-center justify-center gap-2"
       >
         CHECKOUT
+        <FiArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

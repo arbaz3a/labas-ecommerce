@@ -1,117 +1,140 @@
-import React, { useContext, useState, useEffect } from "react";
-import { shopcontext } from "../context/shopcontext";
-import Title from "../components/Title";
-import Productitems from "../components/Productitems";
-import SearchBar from "../components/SearchBar";
-import Filters from "../components/Filters";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
+import ProductCard from "../components/ProductCard";
+import { FiChevronDown, FiCheck } from "react-icons/fi";
+
+const SORT_OPTIONS = [
+  { label: "Relevant", value: "relevant" },
+  { label: "Price: Low to High", value: "price-asc" },
+  { label: "Price: High to Low", value: "price-desc" },
+  { label: "Name: A-Z", value: "name-asc" },
+  { label: "Name: Z-A", value: "name-desc" },
+];
 
 function Shop() {
-  const { products, search } = useContext(shopcontext);
+  const { products, search } = useContext(ShopContext);
+  const { category: urlCategory, subcategory: urlSubcategory } = useParams();
+  const [searchParams] = useSearchParams();
+  const urlSearch = searchParams.get("search") || "";
+
+  const capitalize = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
 
   const [category, setCategory] = useState("All");
   const [type, setType] = useState("All");
-  const [sort, setSort] = useState("default");
   const [filteredProducts, setFilteredProducts] = useState(products || []);
-  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState("relevant");
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef(null);
+  useEffect(() => {
+    const handler = (e) => {
+      if (sortRef.current && !sortRef.current.contains(e.target)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useEffect(() => {
-    const filtered = (products || [])
-      .filter(
-        (item) =>
-          (category === "All" || item.category === category) &&
-          (type === "All" || item.subCategory === type) &&
-          (search.trim() === "" ||
-            item.name.toLowerCase().includes(search.toLowerCase()))
-      )
-      .sort((a, b) => {
-        if (sort === "price-low") return a.price - b.price;
-        if (sort === "price-high") return b.price - a.price;
-        if (sort === "name") return a.name.localeCompare(b.name);
-        return 0;
-      });
+    if (urlCategory) {
+      const cat = capitalize(urlCategory);
+      setCategory(cat);
+      if (urlSubcategory) {
+        const subName = urlSubcategory.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        setType(subName);
+      } else {
+        setType("All");
+      }
+    } else {
+      setCategory("All");
+      setType("All");
+    }
+  }, [urlCategory, urlSubcategory]);
+
+  useEffect(() => {
+    const activeSearch = search || urlSearch;
+    let filtered = (products || []).filter(
+      (item) =>
+        (category === "All" || item.category === category) &&
+        (type === "All" || item.subCategory === type) &&
+        (activeSearch.trim() === "" ||
+          item.name.toLowerCase().includes(activeSearch.toLowerCase()) ||
+          item.category.toLowerCase().includes(activeSearch.toLowerCase()) ||
+          item.subCategory.toLowerCase().includes(activeSearch.toLowerCase()) ||
+          item.description?.toLowerCase().includes(activeSearch.toLowerCase()))
+    );
+    switch (sortBy) {
+      case "price-asc":
+        filtered = [...filtered].sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        filtered = [...filtered].sort((a, b) => b.price - a.price);
+        break;
+      case "name-asc":
+        filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered = [...filtered].sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
 
     setFilteredProducts(filtered);
-  }, [category, type, sort, products, search]);
+  }, [category, type, products, search, urlSearch, sortBy]);
+
+  const pageTitle = category === "All" ? "All Products" : type !== "All" ? type : category;
+  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label || "Relevant";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      {/* header shop page */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          <Title text1={"Our"} text2={"Collection"} />
+    <div className="page-wrapper py-10">
+<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-black">
+          {pageTitle}
         </h1>
-
-        {/* search component */}
-        <SearchBar />
-
-        {/* sort by */}
-        <div className="flex items-center gap-3">
-          <p className="text-sm text-gray-600">Sort By</p>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-lg bg-white outline-none"
-          >
-            <option value="default">Default</option>
-            <option value="price-low">Price: Low → High</option>
-            <option value="price-high">Price: High → Low</option>
-            <option value="name">Name A–Z</option>
-          </select>
-        </div>
-      </div>
-
-      {/* layout */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* mobile filter toggle button */}
-        <div className="md:hidden mb-4">
+<div className="relative" ref={sortRef}>
           <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="bg-gray-100 px-4 py-2 rounded-lg"
+            onClick={() => setSortOpen(!sortOpen)}
+            className="sort-dropdown-trigger"
           >
-            Filter
+            <span className="sort-dropdown-label">{currentSortLabel}</span>
+            <FiChevronDown className={`sort-dropdown-chevron ${sortOpen ? "sort-dropdown-chevron-open" : ""}`} />
           </button>
-        </div>
 
-        {/* filters component */}
-        <div
-          className={`${
-            showFilters ? "block" : "hidden"
-          } md:block md:col-span-3 lg:col-span-2`}
-        >
-          <Filters
-            category={category}
-            setCategory={setCategory}
-            type={type}
-            setType={setType}
-            setSort={setSort}
-          />
-        </div>
-
-        {/* products rendering */}
-        <section className="md:col-span-9 lg:col-span-10">
-          {filteredProducts.length === 0 ? (
-            <p className="text-gray-500">No products found.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredProducts.map((item) => (
-                <div
-                  key={item._id}
-                  className="border border-gray-200 rounded-2xl p-3 bg-white hover:shadow-xl transition"
+          {sortOpen && (
+            <div className="sort-dropdown-menu">
+              {SORT_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setSortBy(option.value);
+                    setSortOpen(false);
+                  }}
+                  className={`sort-dropdown-option ${sortBy === option.value ? "sort-dropdown-option-active" : ""}`}
                 >
-                  <Productitems
-                    id={item._id}
-                    name={item.name}
-                    image={item.image}
-                    price={item.price}
-                    category={item.category}
-                    subCategory={item.subCategory}
-                  />
-                </div>
+                  <span className="sort-dropdown-check">
+                    {sortBy === option.value && <FiCheck className="w-3.5 h-3.5" />}
+                  </span>
+                  <span>{option.label}</span>
+                </button>
               ))}
             </div>
           )}
-        </section>
+        </div>
       </div>
+{filteredProducts.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-lg text-gray-500">No products found.</p>
+          <p className="text-sm mt-2 text-gray-400">Try adjusting your search.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
+          {filteredProducts.map((item) => (
+            <ProductCard key={item._id} id={item._id} name={item.name} image={item.image} price={item.price} category={item.category} subCategory={item.subCategory} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

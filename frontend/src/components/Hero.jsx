@@ -1,63 +1,47 @@
 import React from "react";
 import { assets } from "../assets/frontend_assets/assets";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
-    <section className="bg-white border border-gray-200 rounded-3xl overflow-hidden">
-      <div className="grid grid-cols-1 gap-y-2 pt-2 lg:grid-cols-2 min-h-[520px]">
-
-        {/* LEFT — TEXT */}
+    <section className="relative h-[85vh] sm:h-[92vh] flex items-end overflow-hidden">
+<div className="absolute inset-0">
+        <img
+          src={assets.hero_1}
+          alt="LABAS Fashion"
+          className="w-full h-full object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent" />
+      </div>
+<div className="relative z-10 w-full flex flex-col items-center text-center pb-14 md:pb-20 px-4">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col justify-center px-8 sm:px-12 lg:px-16"
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <span className="text-xs tracking-[0.25em] text-gray-400 mb-4">
-            NEW SEASON
+          <span className="inline-block text-[10px] md:text-[11px] tracking-[0.35em] uppercase mb-4 font-light text-white/70">
+            Spring / Summer 2026
           </span>
 
-          <h1 className="prata-regular text-4xl sm:text-5xl lg:text-6xl leading-tight text-gray-900 mb-6">
-            Modern <br /> Essentials
+          <h1 className="text-5xl sm:text-6xl lg:text-8xl leading-[1.05] mb-3 text-white" style={{ fontFamily: "'Georgia', serif" }}>
+            New Collection
           </h1>
 
-          <p className="text-gray-500 max-w-md mb-10 text-sm sm:text-base">
-            Discover refined silhouettes crafted from premium materials and
-            designed for timeless everyday wear.
+          <p className="text-sm sm:text-base max-w-md mx-auto mb-8 font-light text-white/75">
+            Timeless silhouettes reimagined for the modern wardrobe
           </p>
 
-          <div className="flex items-center gap-6">
+          <Link to="/shop">
             <motion.button
-              whileHover={{ x: 6 }}
-              className="text-sm cursor-pointer uppercase tracking-widest font-medium border-b border-gray-900 pb-1"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-10 py-3.5 text-[11px] tracking-[0.2em] uppercase font-medium bg-white text-black hover:bg-white/90 transition cursor-pointer"
             >
-              Shop Collection
+              Shop Now
             </motion.button>
-
-            <span className="text-xs text-gray-400 uppercase tracking-widest">
-              2026
-            </span>
-          </div>
+          </Link>
         </motion.div>
-
-        {/* RIGHT — IMAGE */}
-        <motion.div
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
-          <img
-            src={assets.hero_img}
-            alt="Hero Fashion"
-            className="w-full h-full object-cover"
-          />
-
-          {/* subtle overlay */}
-          <div className="absolute inset-0 bg-black/5" />
-        </motion.div>
-
       </div>
     </section>
   );

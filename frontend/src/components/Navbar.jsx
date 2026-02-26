@@ -1,102 +1,208 @@
-import React, { useState, useContext } from "react";
-import { assets } from "../assets/frontend_assets/assets";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FiX, FiChevronLeft, FiMenu } from "react-icons/fi";
-import { shopcontext } from "../context/shopcontext";
+import { FiX, FiChevronRight, FiSearch, FiUser, FiShoppingBag, FiHeart, FiArrowLeft } from "react-icons/fi";
+import { ShopContext } from "../context/ShopContext";
 import { AuthContext } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { megaMenuData } from "../assets/frontend_assets/assets";
 import CartDrawer from "./CartDrawer";
+import SearchOverlay from "./SearchOverlay";
 
 export default function Navbar() {
-  const { setShowSearch, cartCount } = useContext(shopcontext);
+  const { setShowSearch, cartCount } = useContext(ShopContext);
   const { user } = useContext(AuthContext);
 
   const [visible, setVisible] = useState(false);
   const [showCartDrawer, setShowCartDrawer] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [mobileView, setMobileView] = useState(null);
   const navigate = useNavigate();
+  const menuTimeout = useRef(null);
+
+  const navCategories = ["Women", "Men", "Shoes", "Watches", "Fragrances"];
+
+  const handleMenuEnter = (cat) => {
+    clearTimeout(menuTimeout.current);
+    setActiveMenu(cat);
+  };
+
+  const handleMenuLeave = () => {
+    menuTimeout.current = setTimeout(() => setActiveMenu(null), 200);
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(menuTimeout.current);
+  }, []);
+
+  const closeMobile = () => {
+    setVisible(false);
+    setTimeout(() => setMobileView(null), 300);
+  };
+
+  const getSubcategories = (cat) => {
+    const data = megaMenuData[cat];
+    if (!data) return [];
+    if (data.subcategories) return data.subcategories;
+    if (data.groups) return Object.values(data.groups).flat();
+    return [];
+  };
+
+
+  const renderMegaContent = (cat) => {
+    const data = megaMenuData[cat];
+    if (!data) return null;
+
+
+    if (data.subcategories) {
+      return (
+        <div className="flex flex-col gap-1">
+          {data.subcategories.map((sub) => (
+            <Link
+              key={sub}
+              to={`/shop/${cat.toLowerCase()}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
+              onClick={() => setActiveMenu(null)}
+              className="text-[13px] py-1 text-gray-500 hover:text-black transition w-fit"
+            >
+              {sub}
+            </Link>
+          ))}
+        </div>
+      );
+    }
+
+
+    if (data.groups) {
+      return (
+        <div className="flex gap-20">
+          {Object.entries(data.groups).map(([group, items]) => (
+            <div key={group}>
+              <h4 className="text-[13px] font-semibold mb-2 text-black">{group}</h4>
+              <div className="flex flex-col gap-1">
+                {items.map((sub) => (
+                  <Link
+                    key={sub}
+                    to={`/shop/${cat.toLowerCase()}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
+                    onClick={() => setActiveMenu(null)}
+                    className="text-[13px] py-1 text-gray-500 hover:text-black transition w-fit"
+                  >
+                    {sub}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <>
-      <div className="flex items-center justify-between py-4 px-3 font-medium relative">
-        <div className="flex items-center gap-1">
-          <button
-            className="sm:hidden p-2 rounded-lg hover:bg-gray-100"
-            onClick={() => setVisible(true)}
-          >
-            <FiMenu className="text-2xl text-gray-700" />
-          </button>
-
-          <Link to="/">
-            <img src={assets.logo} alt="site_logo" className="w-32" />
-          </Link>
-        </div>
-
-        <ul className="hidden sm:flex gap-5 text-gray-700">
-          <NavLink to="/" className="flex flex-col text-sm items-center">
-            Home
-          </NavLink>
-          <NavLink to="/shop" className="flex flex-col text-sm items-center">
-            Shop
-          </NavLink>
-          <NavLink to="/contact" className="flex flex-col text-sm items-center">
-            Contact
-          </NavLink>
-          <NavLink to="/about" className="flex flex-col text-sm items-center">
-            About
-          </NavLink>
-        </ul>
-
-        <div className="flex gap-4 items-center">
-          <img
-            src={assets.search_icon}
-            alt="search_icon"
-            onClick={() => {
-              navigate("/shop");
-              setShowSearch(true);
-            }}
-            className="w-4 h-4 cursor-pointer sm:hidden"
-          />
-
-          <div
-            onClick={() => {
-              navigate("/shop");
-              setShowSearch(true);
-            }}
-            className="hidden sm:flex items-center border-b border-gray-400 cursor-pointer px-3"
-          >
-            <span className="text-sm text-gray-600">SEARCH</span>
+      <nav className="sticky top-0 z-30 bg-white/85 backdrop-blur-md border-b border-gray-200/80">
+        <div className="page-wrapper flex items-center justify-between h-[56px]">
+          <div className="flex items-center gap-3 w-[120px]">
+            <button
+              className="lg:hidden p-1"
+              onClick={() => setVisible(true)}
+              aria-label="Open menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setShowSearch(true)}
+              className="hidden lg:block p-1 text-gray-600 hover:text-black transition cursor-pointer"
+              aria-label="Search"
+            >
+              <FiSearch className="w-[18px] h-[18px]" />
+            </button>
           </div>
-
-          {/* Profile Icon */}
-          <img
-            src={assets.profile_icon}
-            onClick={() => {
-              if (user) navigate("/profile");
-              else navigate("/signin");
-            }}
-            className="w-4 cursor-pointer"
-            alt="profile_icon"
-          />
-
-          {/* Cart */}
-          <div className="relative">
-            <button onClick={() => setShowCartDrawer(true)}>
-              <img
-                src={assets.cart_icon}
-                alt="cart_icon"
-                className="w-4 cursor-pointer"
-              />
+          <Link
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2 text-xl font-medium tracking-[0.35em]"
+            style={{ color: "#111" }}
+          >
+            LABAS
+          </Link>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setShowSearch(true)}
+              className="lg:hidden p-2 text-gray-600 hover:text-black transition cursor-pointer"
+              aria-label="Search"
+            >
+              <FiSearch className="w-[18px] h-[18px]" />
+            </button>
+            <button onClick={() => navigate("/wishlist")} className="p-2 text-gray-600 hover:text-black transition hidden sm:block" aria-label="Wishlist">
+              <FiHeart className="w-[18px] h-[18px]" />
+            </button>
+            <button
+              onClick={() => user ? navigate("/profile") : navigate("/signin")}
+              className="p-2 text-gray-600 hover:text-black transition"
+              aria-label="Profile"
+            >
+              <FiUser className="w-[18px] h-[18px]" />
+            </button>
+            <button
+              onClick={() => setShowCartDrawer(true)}
+              className="relative p-2 text-gray-600 hover:text-black transition"
+              aria-label="Cart"
+            >
+              <FiShoppingBag className="w-[18px] h-[18px]" />
               {cartCount > 0 && (
-                <p className="absolute -right-1 -bottom-px size-3 text-[8px] text-white bg-black rounded-full grid place-items-center">
+                <span className="absolute -right-0.5 -bottom-0.5 size-4 text-[9px] rounded-full grid place-items-center font-semibold bg-black text-white">
                   {cartCount}
-                </p>
+                </span>
               )}
             </button>
           </div>
         </div>
-      </div>
+        <div className="hidden lg:block border-t border-gray-100">
+          <div className="flex items-center justify-center gap-10 h-[44px]">
+            {navCategories.map((cat) => (
+              <div
+                key={cat}
+                className="relative h-full flex items-center"
+                onMouseEnter={() => handleMenuEnter(cat)}
+                onMouseLeave={handleMenuLeave}
+              >
+                <NavLink
+                  to={`/shop/${cat.toLowerCase()}`}
+                  className={({ isActive }) =>
+                    `text-[12px] tracking-[0.2em] uppercase transition-colors duration-200 ${isActive || activeMenu === cat
+                      ? "text-black"
+                      : "text-gray-500 hover:text-black"
+                    }`
+                  }
+                  style={activeMenu === cat ? { borderBottom: "1px solid #000", paddingBottom: "2px" } : {}}
+                >
+                  {cat}
+                </NavLink>
+              </div>
+            ))}
+          </div>
+        </div>
+        <AnimatePresence>
+          {activeMenu && (
+            <motion.div
+              className="absolute left-0 right-0 z-40 bg-white"
+              style={{ borderBottom: "1px solid #eee" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              onMouseEnter={() => handleMenuEnter(activeMenu)}
+              onMouseLeave={handleMenuLeave}
+            >
+              <div className="page-wrapper py-5">
+                {renderMegaContent(activeMenu)}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
 
-      {/* Cart Drawer */}
       <AnimatePresence>
         {showCartDrawer && (
           <motion.div
@@ -104,86 +210,109 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            <div
-              className="absolute inset-0 bg-black/20"
-              onClick={() => setShowCartDrawer(false)}
-            />
-            <CartDrawer
-              onClose={() => setShowCartDrawer(false)}
-              as={motion.div}
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.5, ease: "easeInOut" }}
-            />
+            <div className="absolute inset-0 bg-black/30" onClick={() => setShowCartDrawer(false)} />
+            <CartDrawer onClose={() => setShowCartDrawer(false)} />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mobile menu overlay */}
-      <div
-        className={`fixed inset-0 bg-black/10 z-40 transition-opacity duration-500 ${
-          visible ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setVisible(false)}
-      />
+      <AnimatePresence>
+        {visible && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/25 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeMobile}
+            />
+            <motion.div
+              className="fixed top-0 left-0 h-screen z-50 w-[80%] max-w-sm bg-white shadow-2xl flex flex-col"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+            >
+              <div className="flex items-center justify-between px-6 h-[56px] border-b border-gray-200">
+                <h2 className="text-[13px] font-semibold tracking-[0.2em] uppercase">Menu</h2>
+                <button onClick={closeMobile} className="p-1 text-gray-600 hover:text-black" aria-label="Close menu">
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
 
-      {/* Mobile menu drawer */}
-      <div
-        className={`fixed top-0 right-0 h-screen z-50 bg-white shadow-2xl
-    w-[86%] sm:max-w-sm
-    transform transition-transform duration-500 ease-in-out will-change-transform
-    ${visible ? "translate-x-0" : "translate-x-full"}`}
-      >
-        <div className="flex items-center justify-between px-4 py-4 border-b">
-          <button
-            onClick={() => setVisible(false)}
-            className="flex items-center gap-2 text-gray-700"
-          >
-            <FiChevronLeft className="text-xl" />
-            <span>Back</span>
-          </button>
-          <button
-            onClick={() => setVisible(false)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-          >
-            <FiX className="text-xl text-gray-700" />
-          </button>
-        </div>
+              <div className="overflow-y-auto h-[calc(100vh-56px)]">
+                <AnimatePresence mode="wait">
+                  {mobileView === null ? (
+                    <motion.div
+                      key="main"
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: -20, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {navCategories.map((cat) => (
+                        <button
+                          key={cat}
+                          onClick={() => setMobileView(cat)}
+                          className="w-full flex items-center justify-between px-6 py-4 border-b border-gray-100 text-left cursor-pointer"
+                        >
+                          <span className="text-[13px] font-semibold tracking-[0.15em] uppercase text-black">
+                            {cat}
+                          </span>
+                          <FiChevronRight className="w-4 h-4 text-gray-400" />
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => { navigate("/wishlist"); closeMobile(); }}
+                        className="w-full flex items-center gap-3 px-6 py-4 border-b border-gray-100 text-left cursor-pointer"
+                      >
+                        <FiHeart className="w-4 h-4 text-gray-600" />
+                        <span className="text-[13px] font-medium tracking-[0.1em] uppercase text-gray-700">Wishlist</span>
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key={mobileView}
+                      initial={{ x: 20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 20, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <button
+                        onClick={() => setMobileView(null)}
+                        className="w-full flex items-center gap-2 px-6 py-3 border-b border-gray-100 text-left cursor-pointer"
+                      >
+                        <FiArrowLeft className="w-4 h-4 text-gray-500" />
+                        <span className="text-[11px] tracking-[0.15em] uppercase text-gray-500">Back</span>
+                      </button>
 
-        <div className="flex flex-col px-2 py-4 gap-2">
-          <NavLink
-            to="/"
-            onClick={() => setVisible(false)}
-            className="px-3 py-3 rounded-lg hover:bg-gray-100"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/shop"
-            onClick={() => setVisible(false)}
-            className="px-3 py-3 rounded-lg hover:bg-gray-100"
-          >
-            Shop
-          </NavLink>
-          <NavLink
-            to="/contact"
-            onClick={() => setVisible(false)}
-            className="px-3 py-3 rounded-lg hover:bg-gray-100"
-          >
-            Contact
-          </NavLink>
-          <NavLink
-            to="/about"
-            onClick={() => setVisible(false)}
-            className="px-3 py-3 rounded-lg hover:bg-gray-100"
-          >
-            About
-          </NavLink>
-        </div>
-      </div>
+                      <div className="px-6 pt-5 pb-3">
+                        <h3 className="text-[15px] font-bold tracking-[0.1em] uppercase text-black">
+                          {mobileView}
+                        </h3>
+                      </div>
+
+                      {getSubcategories(mobileView).map((sub) => (
+                        <Link
+                          key={sub}
+                          to={`/shop/${mobileView.toLowerCase()}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
+                          onClick={closeMobile}
+                          className="block px-6 py-3 text-sm text-gray-500 hover:text-black transition"
+                        >
+                          {sub}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      <SearchOverlay />
     </>
   );
 }

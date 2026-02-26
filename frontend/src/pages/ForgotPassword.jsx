@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FiLock, FiCheckCircle, FiArrowLeft } from "react-icons/fi";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,121 +13,55 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "0 24px",
-        fontFamily: "'Inter', sans-serif",
-      }}
-    >
-      <div style={{ width: "100%", maxWidth: "400px" }}>
-        <Link
-          to="/signin"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            fontSize: "11px",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "#737373",
-            textDecoration: "none",
-            marginBottom: "48px",
-          }}
-        >
-          ← Back to sign in
-        </Link>
+    <div className="min-h-screen flex items-center justify-center px-6 bg-[#F7F7F8] relative">
+<button
+        onClick={() => navigate(-1)}
+        className="absolute top-6 left-6 z-20 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition cursor-pointer"
+      >
+        <FiArrowLeft className="w-4 h-4" />
+        <span className="hidden sm:inline">Back</span>
+      </button>
 
-        <h1
-          style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "32px",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            marginBottom: "8px",
-          }}
-        >
-          Forgot Password
-        </h1>
-        <p
-          style={{
-            color: "#737373",
-            fontSize: "11px",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            marginBottom: "48px",
-          }}
-        >
-          We'll send you a reset link
-        </p>
+      <div className="w-full max-w-[420px]">
+        <div className="text-center mb-8">
+          <p className="text-lg font-medium tracking-[0.25em] text-black">LABAS</p>
+        </div>
 
         {!submitted ? (
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "32px" }}
-          >
-            <input
-              type="email"
-              placeholder="EMAIL ADDRESS"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                border: "none",
-                borderBottom: "1px solid #e0e0e0",
-                background: "transparent",
-                padding: "12px 0",
-                fontSize: "13px",
-                letterSpacing: "0.1em",
-                outline: "none",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                width: "100%",
-                backgroundColor: "#000",
-                color: "#fff",
-                padding: "16px",
-                fontSize: "11px",
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Send Reset Link
-            </button>
-          </form>
+          <>
+            <h1 className="text-[24px] font-bold text-center mb-2 text-black" style={{ fontFamily: "'Georgia', serif" }}>Reset your password</h1>
+            <p className="text-center text-[15px] mb-8 text-gray-500">Enter your email and we'll send you a reset link</p>
+            <div className="auth-card">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div>
+                  <label className="block text-[12px] font-medium tracking-[0.15em] uppercase mb-2 text-gray-400">Email</label>
+                  <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="auth-input" />
+                </div>
+                <button type="submit" className="btn-primary mt-2 cursor-pointer">Send Reset Link</button>
+              </form>
+            </div>
+          </>
         ) : (
-          <div>
-            <p style={{ fontSize: "14px", lineHeight: "1.6" }}>
-              If an account exists for <strong>{email}</strong>, you'll receive
-              a password reset link shortly.
-            </p>
-            <button
-              onClick={() => setSubmitted(false)}
-              style={{
-                width: "100%",
-                border: "1px solid #000",
-                background: "transparent",
-                color: "#000",
-                padding: "16px",
-                fontSize: "11px",
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                marginTop: "24px",
-              }}
-            >
-              Try another email
-            </button>
-          </div>
+          <>
+            <div className="flex justify-center mb-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-green-50 border border-green-200">
+                <FiCheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+            <h1 className="text-[28px] font-bold text-center mb-2 text-black" style={{ fontFamily: "'Georgia', serif" }}>Check your inbox</h1>
+            <p className="text-center text-[15px] mb-8 text-gray-500">We've sent a password reset link to <strong className="text-black">{email}</strong></p>
+            <div className="auth-card text-center">
+              <p className="text-[14px] mb-6 text-gray-500">Didn't receive the email? Check your spam folder or try again.</p>
+              <button onClick={() => setSubmitted(false)} className="btn-ghost w-full cursor-pointer" style={{ height: "48px" }}>Resend Email</button>
+            </div>
+          </>
         )}
+
+        <div className="text-center mt-8">
+          <Link to="/signin" className="text-[14px] font-medium text-gray-500 hover:text-black hover:underline transition inline-flex items-center gap-2">
+            ← Back to Sign In
+          </Link>
+        </div>
       </div>
     </div>
   );

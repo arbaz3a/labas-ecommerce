@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
@@ -11,55 +12,62 @@ function Newsletter() {
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Newsletter</h3>
-      <p className="text-gray-600 text-sm mb-4">
+      <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase mb-5 text-gray-900">
+        Newsletter
+      </h3>
+      <p className="text-[13px] mb-5 text-gray-500 leading-relaxed">
         Subscribe to get the latest updates and offers.
       </p>
 
-      <form onSubmit={handleSubmit} className="relative w-full max-w-md">
+      <form onSubmit={handleSubmit} className="relative w-full max-w-xs mb-6">
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="
-            w-full px-4 py-2 pr-12
-            border-b-2 border-gray-300 bg-transparent text-gray-700
-            focus:outline-none focus:border-gray-400 transition
-          "
+          placeholder="Email address"
+          className="w-full py-2.5 pr-10 bg-transparent text-[13px] outline-none transition border-b border-gray-200 text-black focus:border-black placeholder:text-gray-400"
         />
         <button
           type="submit"
-          className="
-            absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-900
-            transition cursor-pointer"
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors cursor-pointer"
+          aria-label="Subscribe"
         >
-          <FaEnvelope size={20} weight="bold" />
+          <FiSend className="w-4 h-4" />
         </button>
       </form>
 
-      <div className="flex space-x-4 mt-6 text-gray-700">
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition">
-          <FaFacebookF />
-        </a>
-        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition">
-          <FaTwitter />
-        </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition">
-          <FaInstagram />
-        </a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition">
-          <FaLinkedinIn />
-        </a>
-        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition">
-          <FaWhatsapp />
-        </a>
+      <div className="flex items-center gap-3">
+        {[
+          { icon: FaFacebookF, href: "https://facebook.com" },
+          { icon: FaTwitter, href: "https://twitter.com" },
+          { icon: FaInstagram, href: "https://instagram.com" },
+          { icon: FaLinkedinIn, href: "https://linkedin.com" },
+          { icon: FaWhatsapp, href: "https://wa.me/1234567890" },
+        ].map(({ icon: Icon, href }, i) => (
+          <a
+            key={i}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-black hover:border-black transition-all"
+          >
+            <Icon className="w-3.5 h-3.5" />
+          </a>
+        ))}
       </div>
 
-      <div className="mt-4 text-gray-700 text-sm space-y-1">
-        <p>Phone: <a href="tel:+92377826576" className="hover:text-gray-900">+92 3000-000000</a></p>
-        <p>Email: <a href="mailto:contact@zevylabas.com" className="hover:text-gray-900">contact@zevylabas.com</a></p>
+      <div className="mt-6 text-[12px] space-y-1.5 text-gray-500">
+        <p>
+          <a href="tel:+923000000000" className="hover:text-black transition-colors duration-200">
+            +92 3000-000000
+          </a>
+        </p>
+        <p>
+          <a href="mailto:contact@labas.pk" className="hover:text-black transition-colors duration-200">
+            contact@labas.pk
+          </a>
+        </p>
       </div>
     </div>
   );
