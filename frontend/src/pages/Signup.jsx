@@ -1,17 +1,35 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiUserPlus, FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import api from "../utils/api";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ name, email, password });
+    setSubmitting(true);
+
+    try {
+      const { data } = await api.post("/auth/register", { name, email, password });
+      login(data.user, data.token);
+      toast.success("Account created successfully!", { toastId: "register-success" });
+      navigate("/");
+    } catch (err) {
+      const msg = err.response?.data?.error || "Registration failed. Please try again.";
+      toast.dismiss();
+      toast.error(msg, { toastId: "register-error" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const getStrength = () => {
@@ -28,14 +46,14 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex bg-white relative">
-<button
+      <button
         onClick={() => navigate(-1)}
         className="absolute top-6 left-6 z-20 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition cursor-pointer"
       >
         <FiArrowLeft className="w-4 h-4" />
         <span className="hidden sm:inline">Back</span>
       </button>
-<div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden bg-[#F5F4F0]">
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden bg-[#F5F4F0]">
         <div className="absolute inset-0 opacity-30"
           style={{
             backgroundImage: `radial-gradient(#C0BFB8 1px, transparent 1px)`,
@@ -51,7 +69,7 @@ export default function SignUp() {
           </p>
         </div>
       </div>
-<div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-[#F7F7F8]">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-[#F7F7F8]">
         <div className="w-full max-w-[420px]">
           <h1 className="text-[28px] font-bold text-center mb-2 text-black" style={{ fontFamily: "'Georgia', serif" }}>
             Create Account
@@ -84,7 +102,9 @@ export default function SignUp() {
                   </div>
                 )}
               </div>
-              <button type="submit" className="btn-primary cursor-pointer">Create Account</button>
+              <button type="submit" disabled={submitting} className="btn-primary cursor-pointer disabled:opacity-60">
+                {submitting ? "Creating account..." : "Create Account"}
+              </button>
             </form>
 
             <p className="text-center text-[14px] mt-6 text-gray-500">

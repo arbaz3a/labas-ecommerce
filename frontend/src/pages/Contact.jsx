@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import api from "../utils/api";
 
 function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
     let newErrors = {};
@@ -18,13 +21,25 @@ function Contact() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
-    setSubmitted(true);
-    setFormData({ name: "", email: "", message: "" });
-    setErrors({});
+
+    setSubmitting(true);
+
+    try {
+      await api.post("/contact", formData);
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+      setErrors({});
+    } catch (err) {
+      const msg = err.response?.data?.error || "Failed to send message. Please try again.";
+      toast.dismiss();
+      toast.error(msg, { toastId: "contact-error" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -80,8 +95,8 @@ function Contact() {
             {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
           </div>
 
-          <button type="submit" className="bg-black cursor-pointer text-white text-sm px-6 py-2 rounded-md hover:bg-gray-800 transition">
-            Send
+          <button type="submit" disabled={submitting} className="bg-black cursor-pointer text-white text-sm px-6 py-2 rounded-md hover:bg-gray-800 transition disabled:opacity-60">
+            {submitting ? "Sending..." : "Send"}
           </button>
         </form>
 

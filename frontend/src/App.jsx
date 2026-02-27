@@ -7,6 +7,7 @@ import Contact from "./pages/Contact.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -18,6 +19,17 @@ import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "./context/AuthContext.jsx";
+
+// Admin imports
+import { AdminProvider } from "./context/AdminContext.jsx";
+import AdminLogin from "./pages/admin/AdminLogin.jsx";
+import AdminSetup from "./pages/admin/AdminSetup.jsx";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminUsers from "./pages/admin/AdminUsers.jsx";
+import AdminProducts from "./pages/admin/AdminProducts.jsx";
+import AdminOrders from "./pages/admin/AdminOrders.jsx";
+import AdminSettings from "./pages/admin/AdminSettings.jsx";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -37,17 +49,18 @@ const PrivateRoute = ({ children }) => {
 function App() {
   const location = useLocation();
 
-  const hideLayout = [
-    "/signin",
-    "/signup",
-    "/forgot-password",
-  ].includes(location.pathname);
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  const hideLayout =
+    isAdminRoute ||
+    ["/signin", "/signup", "/forgot-password"].includes(location.pathname) ||
+    location.pathname.startsWith("/reset-password");
 
   return (
     <div>
       {!hideLayout && <Navbar />}
       <ToastContainer
-        position="top-left"
+        position="top-center"
         autoClose={1800}
         hideProgressBar
         closeOnClick
@@ -61,6 +74,7 @@ function App() {
       />
 
       <Routes>
+        {/* ─── Store Routes ─── */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
@@ -71,26 +85,39 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/product/:productID" element={<ProductDetails />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route
           path="/profile"
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Profile /></PrivateRoute>}
         />
         <Route
           path="/orders"
+          element={<PrivateRoute><Orders /></PrivateRoute>}
+        />
+        <Route path="/orderconfirmation" element={<OrderConfirmation />} />
+
+        {/* ─── Admin Routes ─── */}
+        <Route
+          path="/admin/*"
           element={
-            <PrivateRoute>
-              <Orders />
-            </PrivateRoute>
+            <AdminProvider>
+              <Routes>
+                <Route path="login" element={<AdminLogin />} />
+                <Route path="setup" element={<AdminSetup />} />
+                <Route element={<AdminLayout />}>
+                  <Route index element={<Navigate to="dashboard" />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                </Route>
+              </Routes>
+            </AdminProvider>
           }
         />
-
-        <Route path="/orderconfirmation" element={<OrderConfirmation />} />
       </Routes>
 
       {!hideLayout && <Footer />}

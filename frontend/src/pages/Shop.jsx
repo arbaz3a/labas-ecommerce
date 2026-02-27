@@ -18,14 +18,15 @@ function Shop() {
   const [searchParams] = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
 
-  const capitalize = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
+  const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
 
   const [category, setCategory] = useState("All");
   const [type, setType] = useState("All");
   const [filteredProducts, setFilteredProducts] = useState(products || []);
   const [sortBy, setSortBy] = useState("relevant");
   const [sortOpen, setSortOpen] = useState(false);
-  const sortRef = useRef(null);
+  const sortRef = useRef(null);
+
   useEffect(() => {
     const handler = (e) => {
       if (sortRef.current && !sortRef.current.contains(e.target)) {
@@ -41,7 +42,10 @@ function Shop() {
       const cat = capitalize(urlCategory);
       setCategory(cat);
       if (urlSubcategory) {
-        const subName = urlSubcategory.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        const subName = urlSubcategory
+          .split("-")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
         setType(subName);
       } else {
         setType("All");
@@ -62,8 +66,11 @@ function Shop() {
           item.name.toLowerCase().includes(activeSearch.toLowerCase()) ||
           item.category.toLowerCase().includes(activeSearch.toLowerCase()) ||
           item.subCategory.toLowerCase().includes(activeSearch.toLowerCase()) ||
-          item.description?.toLowerCase().includes(activeSearch.toLowerCase()))
-    );
+          item.description
+            ?.toLowerCase()
+            .includes(activeSearch.toLowerCase()) ||
+          item.productId?.toLowerCase().includes(activeSearch.toLowerCase())),
+    );
     switch (sortBy) {
       case "price-asc":
         filtered = [...filtered].sort((a, b) => a.price - b.price);
@@ -84,22 +91,26 @@ function Shop() {
     setFilteredProducts(filtered);
   }, [category, type, products, search, urlSearch, sortBy]);
 
-  const pageTitle = category === "All" ? "All Products" : type !== "All" ? type : category;
-  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label || "Relevant";
+  const pageTitle =
+    category === "All" ? "All Products" : type !== "All" ? type : category;
+  const currentSortLabel =
+    SORT_OPTIONS.find((o) => o.value === sortBy)?.label || "Relevant";
 
   return (
     <div className="page-wrapper py-10">
-<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-2xl sm:text-3xl font-semibold text-black">
           {pageTitle}
         </h1>
-<div className="relative" ref={sortRef}>
+        <div className="relative" ref={sortRef}>
           <button
             onClick={() => setSortOpen(!sortOpen)}
             className="sort-dropdown-trigger"
           >
             <span className="sort-dropdown-label">{currentSortLabel}</span>
-            <FiChevronDown className={`sort-dropdown-chevron ${sortOpen ? "sort-dropdown-chevron-open" : ""}`} />
+            <FiChevronDown
+              className={`sort-dropdown-chevron ${sortOpen ? "sort-dropdown-chevron-open" : ""}`}
+            />
           </button>
 
           {sortOpen && (
@@ -114,7 +125,9 @@ function Shop() {
                   className={`sort-dropdown-option ${sortBy === option.value ? "sort-dropdown-option-active" : ""}`}
                 >
                   <span className="sort-dropdown-check">
-                    {sortBy === option.value && <FiCheck className="w-3.5 h-3.5" />}
+                    {sortBy === option.value && (
+                      <FiCheck className="w-3.5 h-3.5" />
+                    )}
                   </span>
                   <span>{option.label}</span>
                 </button>
@@ -123,15 +136,23 @@ function Shop() {
           )}
         </div>
       </div>
-{filteredProducts.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-lg text-gray-500">No products found.</p>
-          <p className="text-sm mt-2 text-gray-400">Try adjusting your search.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
           {filteredProducts.map((item) => (
-            <ProductCard key={item._id} id={item._id} name={item.name} image={item.image} price={item.price} category={item.category} subCategory={item.subCategory} />
+            <ProductCard
+              key={item._id}
+              id={item._id}
+              productId={item.productId}
+              name={item.name}
+              image={item.image}
+              price={item.price}
+              category={item.category}
+              subCategory={item.subCategory}
+            />
           ))}
         </div>
       )}

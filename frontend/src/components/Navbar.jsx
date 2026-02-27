@@ -1,6 +1,14 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FiX, FiChevronRight, FiSearch, FiUser, FiShoppingBag, FiHeart, FiArrowLeft } from "react-icons/fi";
+import {
+  FiX,
+  FiChevronRight,
+  FiSearch,
+  FiUser,
+  FiShoppingBag,
+  FiHeart,
+  FiArrowLeft,
+} from "react-icons/fi";
 import { ShopContext } from "../context/ShopContext";
 import { AuthContext } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,11 +55,9 @@ export default function Navbar() {
     return [];
   };
 
-
   const renderMegaContent = (cat) => {
     const data = megaMenuData[cat];
     if (!data) return null;
-
 
     if (data.subcategories) {
       return (
@@ -70,27 +76,31 @@ export default function Navbar() {
       );
     }
 
-
     if (data.groups) {
       return (
         <div className="flex gap-20">
-          {Object.entries(data.groups).map(([group, items]) => (
-            <div key={group}>
-              <h4 className="text-[13px] font-semibold mb-2 text-black">{group}</h4>
-              <div className="flex flex-col gap-1">
-                {items.map((sub) => (
-                  <Link
-                    key={sub}
-                    to={`/shop/${cat.toLowerCase()}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
-                    onClick={() => setActiveMenu(null)}
-                    className="text-[13px] py-1 text-gray-500 hover:text-black transition w-fit"
-                  >
-                    {sub}
-                  </Link>
-                ))}
+          {Object.entries(data.groups).map(([group, items]) => {
+            if (items.length === 0) return null;
+            return (
+              <div key={group}>
+                <h4 className="text-[13px] font-semibold mb-2 text-black">
+                  {group}
+                </h4>
+                <div className="flex flex-col gap-1 mt-2">
+                  {items.map((sub) => (
+                    <Link
+                      key={sub}
+                      to={`/shop/${cat.toLowerCase()}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
+                      onClick={() => setActiveMenu(null)}
+                      className="text-[13px] py-1 text-gray-500 hover:text-black transition w-fit"
+                    >
+                      {sub}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       );
     }
@@ -107,7 +117,13 @@ export default function Navbar() {
               onClick={() => setVisible(true)}
               aria-label="Open menu"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -134,11 +150,17 @@ export default function Navbar() {
             >
               <FiSearch className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => navigate("/wishlist")} className="p-2 text-gray-600 hover:text-black transition hidden sm:block" aria-label="Wishlist">
+            <button
+              onClick={() => navigate("/wishlist")}
+              className="p-2 text-gray-600 hover:text-black transition hidden sm:block"
+              aria-label="Wishlist"
+            >
               <FiHeart className="w-[18px] h-[18px]" />
             </button>
             <button
-              onClick={() => user ? navigate("/profile") : navigate("/signin")}
+              onClick={() =>
+                user ? navigate("/profile") : navigate("/signin")
+              }
               className="p-2 text-gray-600 hover:text-black transition"
               aria-label="Profile"
             >
@@ -170,12 +192,17 @@ export default function Navbar() {
                 <NavLink
                   to={`/shop/${cat.toLowerCase()}`}
                   className={({ isActive }) =>
-                    `text-[12px] tracking-[0.2em] uppercase transition-colors duration-200 ${isActive || activeMenu === cat
-                      ? "text-black"
-                      : "text-gray-500 hover:text-black"
+                    `text-[12px] tracking-[0.2em] uppercase transition-colors duration-200 ${
+                      isActive || activeMenu === cat
+                        ? "text-black"
+                        : "text-gray-500 hover:text-black"
                     }`
                   }
-                  style={activeMenu === cat ? { borderBottom: "1px solid #000", paddingBottom: "2px" } : {}}
+                  style={
+                    activeMenu === cat
+                      ? { borderBottom: "1px solid #000", paddingBottom: "2px" }
+                      : {}
+                  }
                 >
                   {cat}
                 </NavLink>
@@ -212,7 +239,10 @@ export default function Navbar() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            <div className="absolute inset-0 bg-black/30" onClick={() => setShowCartDrawer(false)} />
+            <div
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setShowCartDrawer(false)}
+            />
             <CartDrawer onClose={() => setShowCartDrawer(false)} />
           </motion.div>
         )}
@@ -233,11 +263,21 @@ export default function Navbar() {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
+                ease: [0.32, 0.72, 0, 1],
+              }}
             >
               <div className="flex items-center justify-between px-6 h-[56px] border-b border-gray-200">
-                <h2 className="text-[13px] font-semibold tracking-[0.2em] uppercase">Menu</h2>
-                <button onClick={closeMobile} className="p-1 text-gray-600 hover:text-black" aria-label="Close menu">
+                <h2 className="text-[13px] font-semibold tracking-[0.2em] uppercase">
+                  Menu
+                </h2>
+                <button
+                  onClick={closeMobile}
+                  className="p-1 text-gray-600 hover:text-black"
+                  aria-label="Close menu"
+                >
                   <FiX className="w-5 h-5" />
                 </button>
               </div>
@@ -265,11 +305,16 @@ export default function Navbar() {
                         </button>
                       ))}
                       <button
-                        onClick={() => { navigate("/wishlist"); closeMobile(); }}
+                        onClick={() => {
+                          navigate("/wishlist");
+                          closeMobile();
+                        }}
                         className="w-full flex items-center gap-3 px-6 py-4 border-b border-gray-100 text-left cursor-pointer"
                       >
                         <FiHeart className="w-4 h-4 text-gray-600" />
-                        <span className="text-[13px] font-medium tracking-[0.1em] uppercase text-gray-700">Wishlist</span>
+                        <span className="text-[13px] font-medium tracking-[0.1em] uppercase text-gray-700">
+                          Wishlist
+                        </span>
                       </button>
                     </motion.div>
                   ) : (
@@ -285,7 +330,9 @@ export default function Navbar() {
                         className="w-full flex items-center gap-2 px-6 py-3 border-b border-gray-100 text-left cursor-pointer"
                       >
                         <FiArrowLeft className="w-4 h-4 text-gray-500" />
-                        <span className="text-[11px] tracking-[0.15em] uppercase text-gray-500">Back</span>
+                        <span className="text-[11px] tracking-[0.15em] uppercase text-gray-500">
+                          Back
+                        </span>
                       </button>
 
                       <div className="px-6 pt-5 pb-3">

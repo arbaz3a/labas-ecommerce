@@ -31,6 +31,7 @@ function NewArrivals() {
           <ProductCard
             key={item._id}
             id={item._id}
+            productId={item.productId}
             name={item.name}
             price={item.price}
             image={item.image}

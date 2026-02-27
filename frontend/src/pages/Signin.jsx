@@ -1,31 +1,45 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiLogIn, FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import api from "../utils/api";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login({ email, name: email.split("@")[0] });
-    navigate("/profile");
+    setSubmitting(true);
+
+    try {
+      const { data } = await api.post("/auth/login", { email, password });
+      login(data.user, data.token);
+      navigate("/profile");
+    } catch (err) {
+      const msg = err.response?.data?.error || "Login failed. Please try again.";
+      toast.dismiss();
+      toast.error(msg, { toastId: "login-error" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex bg-white relative">
-<button
+      <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 z-20 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition cursor-pointer"
       >
         <FiArrowLeft className="w-4 h-4" />
         <span className="hidden sm:inline">Back</span>
       </button>
-<div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden bg-[#F5F4F0]">
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden bg-[#F5F4F0]">
         <div className="absolute inset-0 opacity-30"
           style={{
             backgroundImage: `radial-gradient(#C0BFB8 1px, transparent 1px)`,
@@ -41,7 +55,7 @@ export default function SignIn() {
           </p>
         </div>
       </div>
-<div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-[#F7F7F8]">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-[#F7F7F8]">
         <div className="w-full max-w-[420px]">
           <h1 className="text-[28px] font-bold text-center mb-2 text-black" style={{ fontFamily: "'Georgia', serif" }}>
             Sign In
@@ -71,7 +85,9 @@ export default function SignIn() {
                 <Link to="/forgot-password" className="text-[13px] font-medium text-gray-500 hover:text-black hover:underline transition">Forgot Password?</Link>
               </div>
 
-              <button type="submit" className="btn-primary mt-2 cursor-pointer">Sign In</button>
+              <button type="submit" disabled={submitting} className="btn-primary mt-2 cursor-pointer disabled:opacity-60">
+                {submitting ? "Signing in..." : "Sign In"}
+              </button>
             </form>
 
             <div className="flex items-center gap-4 my-6">

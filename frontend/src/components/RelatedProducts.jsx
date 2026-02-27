@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
+import { getImageUrl } from "../utils/imageUtils";
 
 function RelatedProducts({ currentProduct }) {
   const { products, currency } = useContext(ShopContext);
@@ -47,7 +48,7 @@ function RelatedProducts({ currentProduct }) {
         {related.map((product) => (
           <Link
             key={product._id}
-            to={`/product/${product._id}`}
+            to={`/product/${product.productId || product._id}`}
             className="group"
           >
             <div
@@ -60,7 +61,7 @@ function RelatedProducts({ currentProduct }) {
             >
               <div className="overflow-hidden aspect-3/4 bg-gray-50">
                 <img
-                  src={product.image[0]}
+                  src={getImageUrl(product.image[0])}
                   alt={product.name}
                   className="
                 h-full w-full object-cover

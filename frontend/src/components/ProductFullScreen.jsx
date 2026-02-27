@@ -1,4 +1,5 @@
 import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { getImageUrl } from "../utils/imageUtils";
 
 function ProductFullscreen({
   isFullscreen,
@@ -19,7 +20,7 @@ function ProductFullscreen({
       onTouchEnd={handleTouchEnd}
     >
       <img
-        src={mainImage}
+        src={getImageUrl(mainImage)}
         alt={productdata.name}
         className="max-h-[85vh] max-w-full rounded-xl object-contain"
       />

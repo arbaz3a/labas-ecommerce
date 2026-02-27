@@ -4,6 +4,7 @@ import { FiTrash2, FiX, FiShoppingBag } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
+import { getImageUrl } from "../utils/imageUtils";
 
 function CartDrawer({ onClose }) {
   const {
@@ -101,7 +102,7 @@ function CartDrawer({ onClose }) {
                 >
                   <div className="w-[72px] h-[90px] rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
                     <img
-                      src={product.image[0]}
+                      src={getImageUrl(product.image[0])}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />

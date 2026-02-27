@@ -1,5 +1,6 @@
 import React, { useMemo, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
+import { getImageUrl } from "../utils/imageUtils";
 
 function CheckoutSummary({ cartSnapshot }) {
   const { cartItems, products, currency, delivery_fee } =
@@ -33,7 +34,7 @@ function CheckoutSummary({ cartSnapshot }) {
       <h2 className="text-[13px] font-semibold tracking-[0.15em] uppercase text-gray-400 mb-6">
         Order Summary
       </h2>
-<div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-6">
         {items.map((item) => {
           const product = products.find((p) => p._id === item.id);
           if (!product) return null;
@@ -43,10 +44,10 @@ function CheckoutSummary({ cartSnapshot }) {
               key={`${item.id}-${item.size}`}
               className="flex gap-4 items-start"
             >
-<div className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0">
                 <div className="w-14 h-[72px] rounded-lg overflow-hidden bg-gray-200">
                   <img
-                    src={product.image?.[0]}
+                    src={product.image?.[0] ? getImageUrl(product.image[0]) : ""}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
@@ -75,8 +76,8 @@ function CheckoutSummary({ cartSnapshot }) {
           );
         })}
       </div>
-<div className="h-px bg-gray-200 my-5" />
-<div className="space-y-3">
+      <div className="h-px bg-gray-200 my-5" />
+      <div className="space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-[13px] text-gray-500">Subtotal</span>
           <span className="text-[13px] font-medium text-gray-900">

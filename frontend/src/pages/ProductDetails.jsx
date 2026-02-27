@@ -5,6 +5,7 @@ import ProductFullscreen from "../components/ProductFullscreen";
 import ProductInfo from "../components/ProductInfo";
 import ProductGallery from "../components/ProductGallery";
 import RelatedProducts from "../components/RelatedProducts";
+import { getImageUrl } from "../utils/imageUtils";
 
 function ProductDetails() {
   const { productID } = useParams();
@@ -20,10 +21,12 @@ function ProductDetails() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const fetchproductData = async () => {
-    const product = products.find((p) => p._id === productID);
+    const product = products.find(
+      (p) => p.productId === productID || p._id === productID,
+    );
     if (product) {
       setproductdata(product);
-      setMainImage(product.image[0]);
+      setMainImage(getImageUrl(product.image[0]));
       setSelectedSize(product.sizes?.[0] || "");
       setImageIndex(0);
       setQuantity(1);

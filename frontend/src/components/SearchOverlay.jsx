@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiX, FiSearch, FiArrowRight } from "react-icons/fi";
 import { HiOutlineTrendingUp } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
+import { getImageUrl } from "../utils/imageUtils";
 
 const TRENDING_TAGS = ["Jackets", "Watches", "Cotton Shirts", "Sneakers"];
 const MAX_RESULTS = 3;
@@ -46,7 +47,8 @@ function SearchOverlay() {
         item.name.toLowerCase().includes(query) ||
         item.category.toLowerCase().includes(query) ||
         item.subCategory.toLowerCase().includes(query) ||
-        item.description?.toLowerCase().includes(query)
+        item.description?.toLowerCase().includes(query) ||
+        item.productId?.toLowerCase().includes(query),
     );
 
     setTotalResults(filtered.length);
@@ -137,24 +139,28 @@ function SearchOverlay() {
             </div>
             <div className="w-full max-w-[600px] mt-8">
               {search.trim() ? (
-
                 <div>
                   {searchResults.length > 0 ? (
                     <>
                       <p className="text-[11px] tracking-[0.2em] uppercase text-gray-400 font-medium mb-5">
-                        {totalResults} {totalResults === 1 ? "RESULT" : "RESULTS"}
+                        {totalResults}{" "}
+                        {totalResults === 1 ? "RESULT" : "RESULTS"}
                       </p>
 
                       <div className="flex flex-col gap-1">
                         {searchResults.map((product) => (
                           <button
                             key={product._id}
-                            onClick={() => handleProductClick(product._id)}
+                            onClick={() =>
+                              handleProductClick(
+                                product.productId || product._id,
+                              )
+                            }
                             className="flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer text-left w-full group"
                           >
                             <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                               <img
-                                src={product.image[0]}
+                                src={getImageUrl(product.image[0])}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />
@@ -192,7 +198,6 @@ function SearchOverlay() {
                   )}
                 </div>
               ) : (
-
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <HiOutlineTrendingUp className="w-4 h-4 text-gray-400" />

@@ -1,20 +1,34 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiLock, FiCheckCircle, FiArrowLeft } from "react-icons/fi";
+import { FiCheckCircle, FiArrowLeft } from "react-icons/fi";
+import { toast } from "react-toastify";
+import api from "../utils/api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      await api.post("/auth/forgot-password", { email });
+      setSubmitted(true);
+    } catch (err) {
+      const msg = err.response?.data?.error || "Something went wrong. Please try again.";
+      toast.dismiss();
+      toast.error(msg, { toastId: "forgot-error" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-[#F7F7F8] relative">
-<button
+      <button
         onClick={() => navigate(-1)}
         className="absolute top-6 left-6 z-20 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition cursor-pointer"
       >
@@ -37,7 +51,9 @@ export default function ForgotPassword() {
                   <label className="block text-[12px] font-medium tracking-[0.15em] uppercase mb-2 text-gray-400">Email</label>
                   <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="auth-input" />
                 </div>
-                <button type="submit" className="btn-primary mt-2 cursor-pointer">Send Reset Link</button>
+                <button type="submit" disabled={submitting} className="btn-primary mt-2 cursor-pointer disabled:opacity-60">
+                  {submitting ? "Sending..." : "Send Reset Link"}
+                </button>
               </form>
             </div>
           </>
