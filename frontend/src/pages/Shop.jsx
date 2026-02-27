@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { megaMenuData } from "../assets/frontend_assets/assets";
 import ProductCard from "../components/ProductCard";
 import { FiChevronDown, FiCheck } from "react-icons/fi";
 
@@ -42,10 +43,26 @@ function Shop() {
       const cat = capitalize(urlCategory);
       setCategory(cat);
       if (urlSubcategory) {
-        const subName = urlSubcategory
-          .split("-")
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(" ");
+        // Try to find match in megaMenuData for accurate naming (e.g. T-Shirts vs T Shirts)
+        let subName = "";
+        const data = megaMenuData[cat];
+        if (data) {
+          const allSubs =
+            data.subcategories ||
+            (data.groups ? Object.values(data.groups).flat() : []);
+          subName = allSubs.find(
+            (s) =>
+              s.toLowerCase().replace(/\s+/g, "-") ===
+              urlSubcategory.toLowerCase(),
+          );
+        }
+
+        if (!subName) {
+          subName = urlSubcategory
+            .split("-")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ");
+        }
         setType(subName);
       } else {
         setType("All");

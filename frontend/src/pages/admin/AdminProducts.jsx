@@ -535,8 +535,8 @@ const AdminProducts = () => {
                 />
               </div>
 
-              {/* Price / Stock / Sub-Category */}
-              <div className="admin-form-row-3">
+              {/* Price / Stock */}
+              <div className="admin-form-row">
                 <div className="admin-form-group">
                   <label className="admin-form-label">Price (Rs)</label>
                   <input
@@ -561,25 +561,27 @@ const AdminProducts = () => {
                     min={0}
                   />
                 </div>
-                <div className="admin-form-group">
-                  <label className="admin-form-label">Sub-Category</label>
-                  <select
-                    className="admin-form-input"
-                    value={form.subCategory}
-                    onChange={(e) =>
-                      setForm({ ...form, subCategory: e.target.value })
-                    }
-                  >
-                    {SUBCATEGORIES[form.category]?.map((sc) => (
-                      <option key={sc} value={sc}>
-                        {sc}
-                      </option>
-                    ))}
-                    {!SUBCATEGORIES[form.category]?.length && (
-                      <option value="">No subcategories</option>
-                    )}
-                  </select>
-                </div>
+              </div>
+
+              {/* Sub-Category */}
+              <div className="admin-form-group">
+                <label className="admin-form-label">Sub-Category</label>
+                <select
+                  className="admin-form-input"
+                  value={form.subCategory}
+                  onChange={(e) =>
+                    setForm({ ...form, subCategory: e.target.value })
+                  }
+                >
+                  {SUBCATEGORIES[form.category]?.map((sc) => (
+                    <option key={sc} value={sc}>
+                      {sc}
+                    </option>
+                  ))}
+                  {!SUBCATEGORIES[form.category]?.length && (
+                    <option value="">No subcategories</option>
+                  )}
+                </select>
               </div>
 
               {/* Sizes */}

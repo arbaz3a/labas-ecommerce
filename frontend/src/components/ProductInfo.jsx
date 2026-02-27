@@ -64,69 +64,74 @@ function ProductInfo({
         })}
       </p>
 
-      {productdata.description && (
-        <p className="text-sm text-gray-500 leading-relaxed">
-          {productdata.description}
-        </p>
-      )}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-500">
-            Size
-          </p>
-          {productdata.category !== "Watches" &&
-            productdata.category !== "Fragrances" && (
-              <button
-                onClick={() => setShowSizeChart(true)}
-                className="flex items-center gap-1 text-xs text-gray-500 hover:text-black transition cursor-pointer"
-              >
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
+      {productdata.sizes && productdata.sizes.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-medium uppercase tracking-widest text-gray-500">
+              Size
+            </p>
+            {productdata.category !== "Watches" &&
+              productdata.category !== "Fragrances" && (
+                <button
+                  onClick={() => setShowSizeChart(true)}
+                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-black transition cursor-pointer"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 7h6m-6 4h3m-3 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"
-                  />
-                </svg>
-                Size Guide
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 7h6m-6 4h3m-3 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"
+                    />
+                  </svg>
+                  Size Guide
+                </button>
+              )}
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {productdata.sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() =>
+                  setSelectedSize((prev) => (prev === size ? null : size))
+                }
+                className={`px-4 uppercase py-2.5 text-xs transition cursor-pointer outline-none border ${
+                  selectedSize === size
+                    ? "bg-black text-white border-black cursor-default"
+                    : "border-gray-300 hover:border-black"
+                }`}
+              >
+                {size}
               </button>
-            )}
+            ))}
+          </div>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          {productdata.sizes.map((size) => (
-            <button
-              key={size}
-              onClick={() =>
-                setSelectedSize((prev) => (prev === size ? null : size))
-              }
-              className={`px-4 py-2.5 text-xs transition cursor-pointer outline-none border ${
-                selectedSize === size
-                  ? "bg-black text-white border-black cursor-default"
-                  : "border-gray-300 hover:border-black"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
+
       <div className="flex gap-3 mt-2">
         <button
           onClick={() => {
             toast.dismiss();
-            if (!selectedSize) {
+
+            // Only require size if product has sizes
+            if (
+              productdata.sizes &&
+              productdata.sizes.length > 0 &&
+              !selectedSize
+            ) {
               toast("Please select a size", {
                 type: "error",
                 toastId: "size-error-toast",
               });
               return;
             }
-            addToCart(productdata._id, selectedSize, quantity);
+
+            addToCart(productdata._id, selectedSize || "One Size", quantity);
             toast("Added to cart", {
               type: "success",
               toastId: "cart-success",

@@ -14,7 +14,7 @@ function OrderSummary({
 
   return (
     <div className="border-t border-gray-100 px-6 py-5 flex-shrink-0 bg-white">
-<div className="space-y-2 mb-3">
+      <div className="space-y-2 mb-3">
         <div className="flex justify-between items-center">
           <span className="text-[13px] text-gray-500">
             Subtotal ({items.length} {items.length === 1 ? "item" : "items"})
@@ -35,14 +35,14 @@ function OrderSummary({
       </div>
 
       <div className="h-px bg-gray-100 my-3" />
-<div className="flex justify-between items-center mb-5">
+      <div className="flex justify-between items-center mb-5">
         <span className="text-sm font-semibold text-black">Total</span>
         <span className="text-sm font-semibold text-black">
           {currency}
           {total.toLocaleString("en-PK")}
         </span>
       </div>
-<button
+      <button
         onClick={() => {
           onClose();
           navigate("/checkout");
@@ -50,7 +50,6 @@ function OrderSummary({
         className="w-full h-12 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase rounded-full hover:bg-gray-900 transition-colors cursor-pointer flex items-center justify-center gap-2"
       >
         CHECKOUT
-        <FiArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

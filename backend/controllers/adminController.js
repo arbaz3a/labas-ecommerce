@@ -198,7 +198,7 @@ exports.uploadProductImage = async (req, res, next) => {
         }
 
         const urls = req.files.map(
-            (f) => `/uploads/products/${f.filename}`
+            (f) => `/uploads/${f.filename}`
         );
 
         res.status(200).json({ success: true, urls });

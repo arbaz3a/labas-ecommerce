@@ -35,7 +35,7 @@ const loginLimiter = rateLimit({
 // ─── Multer config for product images ───
 const productStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, "..", "public", "uploads", "products");
+        const dir = path.join(__dirname, "..", "public", "uploads");
         const fs = require("fs");
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir);

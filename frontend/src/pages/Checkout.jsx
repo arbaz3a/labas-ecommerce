@@ -58,8 +58,10 @@ function Checkout() {
     }
 
     if (!formData.city?.trim()) newErrors.city = "Please select your city";
-    if (!formData.firstName?.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName?.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.firstName?.trim())
+      newErrors.firstName = "First name is required";
+    if (!formData.lastName?.trim())
+      newErrors.lastName = "Last name is required";
     if (!formData.address?.trim()) newErrors.address = "Address is required";
 
     if (!formData.phone?.trim()) {
@@ -119,7 +121,8 @@ function Checkout() {
         state: { formData, order: data.order },
       });
     } catch (err) {
-      const msg = err.response?.data?.error || "Order failed. Please try again.";
+      const msg =
+        err.response?.data?.error || "Order failed. Please try again.";
       toast.error(msg, { toastId: "order-error" });
     } finally {
       setSubmitting(false);
@@ -145,7 +148,9 @@ function Checkout() {
                 <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center text-[11px] font-semibold">
                   1
                 </div>
-                <h2 className="text-[15px] font-semibold text-black">Contact</h2>
+                <h2 className="text-[15px] font-semibold text-black">
+                  Contact
+                </h2>
               </div>
             </div>
 
@@ -192,10 +197,13 @@ function Checkout() {
             <div className="checkout-shipping-box">
               <div className="flex items-center gap-3">
                 <FiTruck className="w-4 h-4 text-gray-500" />
-                <span className="text-[13px] text-gray-800">Standard Delivery</span>
+                <span className="text-[13px] text-gray-800">
+                  Standard Delivery
+                </span>
               </div>
               <span className="text-[13px] font-semibold text-black">
-                {currency}{delivery_fee}
+                {currency}
+                {delivery_fee}
               </span>
             </div>
           </div>
@@ -222,7 +230,9 @@ function Checkout() {
                     className="accent-black"
                   />
                   <FiCreditCard className="w-4 h-4 text-gray-600" />
-                  <span className="text-[13px] text-gray-900">Credit/Debit Card</span>
+                  <span className="text-[13px] text-gray-900">
+                    Credit/Debit Card
+                  </span>
                 </div>
               </label>
 
@@ -238,7 +248,9 @@ function Checkout() {
                     onChange={handleChange}
                     className="accent-black"
                   />
-                  <span className="text-[13px] text-gray-900">Cash on Delivery (COD)</span>
+                  <span className="text-[13px] text-gray-900">
+                    Cash on Delivery (COD)
+                  </span>
                 </div>
               </label>
             </div>
@@ -253,8 +265,8 @@ function Checkout() {
             {submitting
               ? "Placing order..."
               : formData.paymentMethod === "cod"
-                ? "Complete Order"
-                : "Pay Now"}
+                ? "PLACE ORDER"
+                : "PAY NOW"}
           </button>
 
           <PolicyLinks />
