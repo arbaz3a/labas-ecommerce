@@ -110,7 +110,7 @@ const AdminUsers = () => {
                 </table>
             </div>
 
-            {/* Mobile Cards */}
+            {/* mobile cards */}
             <div className="admin-card-list">
                 {users.length === 0 ? (
                     <p style={{ textAlign: "center", color: "#999", padding: "20px" }}>No users found</p>

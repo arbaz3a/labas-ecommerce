@@ -12,7 +12,7 @@ const {
 
 const router = express.Router();
 
-// Register
+// register
 router.post(
     "/register",
     [
@@ -26,7 +26,7 @@ router.post(
     register
 );
 
-// Login
+// login
 router.post(
     "/login",
     [
@@ -37,7 +37,7 @@ router.post(
     login
 );
 
-// Forgot password
+// forgot password
 router.post(
     "/forgot-password",
     [body("email").isEmail().withMessage("Please provide a valid email")],
@@ -45,7 +45,7 @@ router.post(
     forgotPassword
 );
 
-// Reset password
+// reset password
 router.post(
     "/reset-password/:token",
     [
@@ -57,7 +57,7 @@ router.post(
     resetPassword
 );
 
-// Get current user (protected)
+// get current user protected
 router.get("/me", protect, getMe);
 
 module.exports = router;

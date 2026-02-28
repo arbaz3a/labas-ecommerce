@@ -2,11 +2,7 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-/**
- * @desc    Create a new order
- * @route   POST /api/orders
- * @access  Private
- */
+/* desc create a new order route post api orders access private */
 exports.createOrder = async (req, res, next) => {
     try {
         const { items, shippingAddress, paymentMethod } = req.body;
@@ -23,7 +19,7 @@ exports.createOrder = async (req, res, next) => {
             return next(new ErrorResponse("Payment method is required", 400));
         }
 
-        // Build order items with product snapshots
+        // build order items with product snapshots
         const orderItems = [];
         let totalPrice = 0;
 
@@ -48,7 +44,7 @@ exports.createOrder = async (req, res, next) => {
             });
         }
 
-        // Add delivery fee
+        // add delivery fee
         totalPrice += 199;
 
         const order = await Order.create({
@@ -68,11 +64,7 @@ exports.createOrder = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get logged-in user's orders
- * @route   GET /api/orders
- * @access  Private
- */
+/* desc get logged in user s orders route get api orders access private */
 exports.getMyOrders = async (req, res, next) => {
     try {
         const orders = await Order.find({ user: req.user.id }).sort({
@@ -89,11 +81,7 @@ exports.getMyOrders = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get single order by ID
- * @route   GET /api/orders/:id
- * @access  Private
- */
+/* desc get single order by id route get api orders id access private */
 exports.getOrderById = async (req, res, next) => {
     try {
         const order = await Order.findById(req.params.id);
@@ -102,7 +90,7 @@ exports.getOrderById = async (req, res, next) => {
             return next(new ErrorResponse("Order not found", 404));
         }
 
-        // Ensure the order belongs to the requesting user
+        // ensure the order belongs to the requesting user
         if (order.user.toString() !== req.user.id) {
             return next(new ErrorResponse("Not authorized to view this order", 403));
         }

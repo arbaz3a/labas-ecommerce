@@ -5,7 +5,7 @@ const { submitContact } = require("../controllers/contactController");
 
 const router = express.Router();
 
-// Submit contact form
+// submit contact form
 router.post(
     "/",
     [

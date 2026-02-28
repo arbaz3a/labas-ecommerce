@@ -25,14 +25,14 @@ const {
 
 const router = express.Router();
 
-// ─── Rate limiter for auth routes ───
+// rate limiter for auth routes
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
     message: { success: false, error: "Too many attempts, please try again later" },
 });
 
-// ─── Multer config for product images ───
+// multer config for product images
 const productStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         const dir = path.join(__dirname, "..", "public", "uploads");
@@ -62,7 +62,7 @@ const uploadProduct = multer({
 });
 
 
-// ─── Public routes (rate limited) ───
+// public routes rate limited
 router.get("/setup-check", checkAdminExists);
 
 router.post(
@@ -88,25 +88,25 @@ router.post(
     adminLogin
 );
 
-// ─── All routes below require admin auth ───
+// all routes below require admin auth
 router.use(protect, authorize("admin"));
 
-// Dashboard
+// dashboard
 router.get("/dashboard", getDashboardStats);
 
-// Users
+// users
 router.get("/users", getAllUsers);
 router.delete("/users/:id", deleteUser);
 
-// Orders
+// orders
 router.get("/orders", getAllOrders);
 router.put("/orders/:id/status", updateOrderStatus);
 router.put("/orders/:id/payment", updatePaymentStatus);
 
-// Uploads
+// uploads
 router.post("/upload/product", uploadProduct.array("images", 10), uploadProductImage);
 
-// Settings
+// settings
 router.get("/settings", getSettings);
 router.get("/profile", getAdminProfile);
 router.put("/profile", updateProfile);

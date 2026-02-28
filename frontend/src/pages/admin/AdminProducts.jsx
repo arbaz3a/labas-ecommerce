@@ -50,9 +50,9 @@ const AdminProducts = () => {
   const [catFilter, setCatFilter] = useState("All");
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null); // null = new, object = editing
+  const [editing, setEditing] = useState(null); // null new object editing
   const [form, setForm] = useState({ ...emptyProduct });
-  const [imageTab, setImageTab] = useState("upload"); // "upload" | "url"
+  const [imageTab, setImageTab] = useState("upload"); // upload url
   const [imageUrls, setImageUrls] = useState("");
   const [previews, setPreviews] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -135,7 +135,7 @@ const AdminProducts = () => {
     try {
       let imageList = [];
 
-      // Handle image uploads
+      // handle image uploads
       if (imageTab === "upload") {
         let uploadedUrls = [];
         if (uploadFiles.length > 0) {
@@ -348,7 +348,7 @@ const AdminProducts = () => {
         </table>
       </div>
 
-      {/* Mobile Cards */}
+      {/* mobile cards */}
       <div className="admin-card-list">
         {products.length === 0 ? (
           <p style={{ textAlign: "center", color: "#999", padding: "20px" }}>
@@ -442,7 +442,7 @@ const AdminProducts = () => {
         )}
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* add edit modal */}
       {modalOpen && (
         <div
           className="admin-modal-overlay"
@@ -474,7 +474,7 @@ const AdminProducts = () => {
                 </div>
               )}
 
-              {/* Product ID + Category row */}
+              {/* product id category row */}
               <div className="admin-form-row">
                 <div className="admin-form-group">
                   <label className="admin-form-label">Product ID</label>
@@ -511,7 +511,7 @@ const AdminProducts = () => {
                 </div>
               </div>
 
-              {/* Name */}
+              {/* name */}
               <div className="admin-form-group">
                 <label className="admin-form-label">Name</label>
                 <input
@@ -522,7 +522,7 @@ const AdminProducts = () => {
                 />
               </div>
 
-              {/* Description */}
+              {/* description */}
               <div className="admin-form-group">
                 <label className="admin-form-label">Description</label>
                 <textarea
@@ -535,7 +535,7 @@ const AdminProducts = () => {
                 />
               </div>
 
-              {/* Price / Stock */}
+              {/* price stock */}
               <div className="admin-form-row">
                 <div className="admin-form-group">
                   <label className="admin-form-label">Price (Rs)</label>
@@ -563,7 +563,7 @@ const AdminProducts = () => {
                 </div>
               </div>
 
-              {/* Sub-Category */}
+              {/* sub category */}
               <div className="admin-form-group">
                 <label className="admin-form-label">Sub-Category</label>
                 <select
@@ -584,7 +584,7 @@ const AdminProducts = () => {
                 </select>
               </div>
 
-              {/* Sizes */}
+              {/* sizes */}
               <div className="admin-form-group">
                 <label className="admin-form-label">
                   Sizes (comma-separated)
@@ -605,7 +605,7 @@ const AdminProducts = () => {
                 />
               </div>
 
-              {/* Care Instructions */}
+              {/* care instructions */}
               <div className="admin-form-group">
                 <label className="admin-form-label">
                   Care Instructions (comma-separated)
@@ -620,7 +620,7 @@ const AdminProducts = () => {
                 />
               </div>
 
-              {/* Images */}
+              {/* images */}
               <div className="admin-form-group">
                 <div
                   style={{
@@ -703,7 +703,7 @@ const AdminProducts = () => {
                 )}
               </div>
 
-              {/* Bestseller */}
+              {/* bestseller */}
               <div className="admin-checkbox-wrap">
                 <input
                   type="checkbox"

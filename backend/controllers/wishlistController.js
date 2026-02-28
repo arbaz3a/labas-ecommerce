@@ -2,11 +2,7 @@ const Wishlist = require("../models/Wishlist");
 const Product = require("../models/Product");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-/**
- * @desc    Get current user's wishlist
- * @route   GET /api/wishlist
- * @access  Private
- */
+/* desc get current user s wishlist route get api wishlist access private */
 exports.getWishlist = async (req, res, next) => {
     try {
         let wishlist = await Wishlist.findOne({ user: req.user.id }).populate(
@@ -27,11 +23,7 @@ exports.getWishlist = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Add product to wishlist
- * @route   POST /api/wishlist
- * @access  Private
- */
+/* desc add product to wishlist route post api wishlist access private */
 exports.addToWishlist = async (req, res, next) => {
     try {
         const { productId } = req.body;
@@ -68,11 +60,7 @@ exports.addToWishlist = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Remove product from wishlist
- * @route   DELETE /api/wishlist/:productId
- * @access  Private
- */
+/* desc remove product from wishlist route delete api wishlist productid access private */
 exports.removeFromWishlist = async (req, res, next) => {
     try {
         const wishlist = await Wishlist.findOne({ user: req.user.id });

@@ -43,7 +43,7 @@ function Shop() {
       const cat = capitalize(urlCategory);
       setCategory(cat);
       if (urlSubcategory) {
-        // Try to find match in megaMenuData for accurate naming (e.g. T-Shirts vs T Shirts)
+        // try to find match in megamenudata for accurate naming e g t shirts vs t shirts
         let subName = "";
         const data = megaMenuData[cat];
         if (data) {

@@ -10,11 +10,11 @@ const {
 
 const router = express.Router();
 
-// Public routes
+// public routes
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
-// Admin-only routes
+// admin only routes
 router.post("/", protect, authorize("admin"), createProduct);
 router.put("/:id", protect, authorize("admin"), updateProduct);
 router.delete("/:id", protect, authorize("admin"), deleteProduct);

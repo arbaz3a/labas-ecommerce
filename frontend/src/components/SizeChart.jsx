@@ -27,7 +27,7 @@ const sizeCharts = {
     ],
     note: "Measure around the fullest part of your chest while standing straight.",
   },
-  Polos: {
+  Polo: {
     title: "Polo Size Guide",
     headers: ["SIZE", "CHEST (IN)", "LENGTH (IN)", "SLEEVE (IN)"],
     rows: [
@@ -50,17 +50,7 @@ const sizeCharts = {
     ],
     note: "Measure your natural waist at the narrowest point.",
   },
-  "Kameez Shalwar": {
-    title: "Kameez Shalwar Size Guide",
-    headers: ["SIZE", "CHEST (IN)", "LENGTH (IN)", "SHALWAR WAIST (IN)"],
-    rows: [
-      ["S", "38", "40", "28–30"],
-      ["M", "40", "42", "30–32"],
-      ["L", "42", "44", "32–34"],
-      ["XL", "44", "46", "34–36"],
-    ],
-    note: "Kameez length is measured from shoulder to hem.",
-  },
+
   "Hoodies & Sweatshirts": {
     title: "Hoodie Size Guide",
     headers: ["SIZE", "CHEST (IN)", "LENGTH (IN)", "SLEEVE (IN)"],
@@ -94,29 +84,7 @@ const sizeCharts = {
     ],
     note: "Designed for a comfortable, relaxed fit.",
   },
-  Coats: {
-    title: "Coat Size Guide",
-    headers: ["SIZE", "CHEST (IN)", "LENGTH (IN)", "SHOULDER (IN)"],
-    rows: [
-      ["S", "38–40", "32", "17.5"],
-      ["M", "40–42", "33", "18"],
-      ["L", "42–44", "34", "18.5"],
-      ["XL", "44–46", "35", "19"],
-    ],
-    note: "Coat length is measured from shoulder to hem.",
-  },
-  Dresses: {
-    title: "Dress Size Guide",
-    headers: ["SIZE", "BUST (IN)", "WAIST (IN)", "HIP (IN)"],
-    rows: [
-      ["XS", "32", "24", "35"],
-      ["S", "34", "26", "37"],
-      ["M", "36", "28", "39"],
-      ["L", "38", "30", "41"],
-      ["XL", "40", "32", "43"],
-    ],
-    note: "Measure around the fullest part of your bust, smallest part of your waist, and fullest part of your hips.",
-  },
+
   "Top & Blouses": {
     title: "Tops Size Guide",
     headers: ["SIZE", "BUST (IN)", "LENGTH (IN)", "SHOULDER (IN)"],
@@ -129,18 +97,7 @@ const sizeCharts = {
     ],
     note: "Measure around the fullest part of your bust.",
   },
-  Skirts: {
-    title: "Skirt Size Guide",
-    headers: ["SIZE", "WAIST (IN)", "HIP (IN)", "LENGTH (IN)"],
-    rows: [
-      ["XS", "24", "35", "24"],
-      ["S", "26", "37", "25"],
-      ["M", "28", "39", "26"],
-      ["L", "30", "41", "27"],
-      ["XL", "32", "43", "28"],
-    ],
-    note: "Measure your natural waist at the narrowest point.",
-  },
+
   Boots: {
     title: "Shoe Size Guide",
     headers: ["SIZE", "UK", "US", "EU", "FOOT LENGTH (CM)"],
@@ -192,7 +149,7 @@ export function getSizeChart(category, subCategory) {
   if (category === "Shoes") return sizeCharts.Boots;
   if (category === "Watches") return sizeCharts["Men's Watches"];
   if (category === "Men") return sizeCharts.Shirts;
-  if (category === "Women") return sizeCharts.Dresses;
+  if (category === "Women") return sizeCharts["Top & Blouses"];
   return null;
 }
 

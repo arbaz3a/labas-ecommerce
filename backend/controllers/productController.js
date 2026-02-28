@@ -1,11 +1,7 @@
 const Product = require("../models/Product");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-/**
- * @desc    Get all products (with optional filters)
- * @route   GET /api/products
- * @access  Public
- */
+/* desc get all products with optional filters route get api products access public */
 exports.getAllProducts = async (req, res, next) => {
     try {
         const { category, subCategory, search, bestseller } = req.query;
@@ -37,11 +33,7 @@ exports.getAllProducts = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get single product
- * @route   GET /api/products/:id
- * @access  Public
- */
+/* desc get single product route get api products id access public */
 exports.getProductById = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -59,11 +51,7 @@ exports.getProductById = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Create product
- * @route   POST /api/products
- * @access  Private/Admin
- */
+/* desc create product route post api products access private admin */
 exports.createProduct = async (req, res, next) => {
     try {
         const product = await Product.create(req.body);
@@ -77,11 +65,7 @@ exports.createProduct = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Update product
- * @route   PUT /api/products/:id
- * @access  Private/Admin
- */
+/* desc update product route put api products id access private admin */
 exports.updateProduct = async (req, res, next) => {
     try {
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -102,11 +86,7 @@ exports.updateProduct = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Delete product
- * @route   DELETE /api/products/:id
- * @access  Private/Admin
- */
+/* desc delete product route delete api products id access private admin */
 exports.deleteProduct = async (req, res, next) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);

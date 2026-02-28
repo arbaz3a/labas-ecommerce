@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-/**
- * Protect routes — verify JWT token
- */
+/* protect routes verify jwt token */
 exports.protect = async (req, res, next) => {
     let token;
 
@@ -33,9 +31,7 @@ exports.protect = async (req, res, next) => {
     }
 };
 
-/**
- * Grant access to specific roles
- */
+/* grant access to specific roles */
 exports.authorize = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {

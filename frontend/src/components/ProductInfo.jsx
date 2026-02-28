@@ -118,7 +118,7 @@ function ProductInfo({
           onClick={() => {
             toast.dismiss();
 
-            // Only require size if product has sizes
+            // only require size if product has sizes
             if (
               productdata.sizes &&
               productdata.sizes.length > 0 &&

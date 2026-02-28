@@ -7,7 +7,7 @@ const api = axios.create({
     },
 });
 
-// Attach JWT token to every request
+// attach jwt token to every request
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("labas_token");
     if (token) {
@@ -16,14 +16,14 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Handle 401 responses globally
+// handle 401 responses globally
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem("labas_token");
             localStorage.removeItem("labas_user");
-            // Only redirect if not already on an auth page
+            // only redirect if not already on an auth page
             if (
                 !window.location.pathname.includes("/signin") &&
                 !window.location.pathname.includes("/signup")

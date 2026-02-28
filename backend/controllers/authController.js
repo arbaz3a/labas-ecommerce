@@ -4,22 +4,18 @@ const ErrorResponse = require("../utils/ErrorResponse");
 const sendTokenResponse = require("../utils/sendToken");
 const sendEmail = require("../utils/sendEmail");
 
-/**
- * @desc    Register user
- * @route   POST /api/auth/register
- * @access  Public
- */
+/* desc register user route post api auth register access public */
 exports.register = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
 
-        // Check if user already exists
+        // check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return next(new ErrorResponse("An account with this email already exists", 400));
         }
 
-        // Create user
+        // create user
         const user = await User.create({ name, email, password });
 
         sendTokenResponse(user, 201, res);
@@ -28,23 +24,19 @@ exports.register = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Login user
- * @route   POST /api/auth/login
- * @access  Public
- */
+/* desc login user route post api auth login access public */
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // Find user and include password field
+        // find user and include password field
         const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
             return next(new ErrorResponse("Invalid credentials", 401));
         }
 
-        // Check if password matches
+        // check if password matches
         const isMatch = await user.matchPassword(password);
 
         if (!isMatch) {
@@ -57,11 +49,7 @@ exports.login = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Forgot password — send reset email
- * @route   POST /api/auth/forgot-password
- * @access  Public
- */
+/* desc forgot password send reset email route post api auth forgot password access public */
 exports.forgotPassword = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });
@@ -70,11 +58,11 @@ exports.forgotPassword = async (req, res, next) => {
             return next(new ErrorResponse("No account found with that email", 404));
         }
 
-        // Get reset token
+        // get reset token
         const resetToken = user.getResetPasswordToken();
         await user.save({ validateBeforeSave: false });
 
-        // Create reset URL
+        // create reset url
         const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
         const html = `
@@ -99,7 +87,7 @@ exports.forgotPassword = async (req, res, next) => {
                 message: "Password reset email sent",
             });
         } catch (err) {
-            // If email fails, clean up the token
+            // if email fails clean up the token
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
             await user.save({ validateBeforeSave: false });
@@ -111,14 +99,10 @@ exports.forgotPassword = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Reset password
- * @route   POST /api/auth/reset-password/:token
- * @access  Public
- */
+/* desc reset password route post api auth reset password token access public */
 exports.resetPassword = async (req, res, next) => {
     try {
-        // Hash the token from the URL
+        // hash the token from the url
         const resetPasswordToken = crypto
             .createHash("sha256")
             .update(req.params.token)
@@ -133,7 +117,7 @@ exports.resetPassword = async (req, res, next) => {
             return next(new ErrorResponse("Invalid or expired reset token", 400));
         }
 
-        // Set new password
+        // set new password
         user.password = req.body.password;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
@@ -145,11 +129,7 @@ exports.resetPassword = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get current logged-in user
- * @route   GET /api/auth/me
- * @access  Private
- */
+/* desc get current logged in user route get api auth me access private */
 exports.getMe = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);

@@ -19,7 +19,7 @@ const ShopProvider = (props) => {
   const [orders, setOrders] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
-  // Fetch products from API on mount
+  // fetch products from api on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -34,7 +34,7 @@ const ShopProvider = (props) => {
     fetchProducts();
   }, []);
 
-  // Fetch wishlist from API when user logs in
+  // fetch wishlist from api when user logs in
   useEffect(() => {
     if (!user || !token) {
       setWishlist([]);
@@ -51,7 +51,7 @@ const ShopProvider = (props) => {
     fetchWishlist();
   }, [user, token]);
 
-  // Fetch orders from API when user logs in
+  // fetch orders from api when user logs in
   useEffect(() => {
     if (!user || !token) {
       setOrders([]);
@@ -73,7 +73,7 @@ const ShopProvider = (props) => {
 
     const isWished = wishlist.includes(productId);
 
-    // Optimistic update
+    // optimistic update
     if (isWished) {
       setWishlist((prev) => prev.filter((id) => id !== productId));
     } else {
@@ -87,7 +87,7 @@ const ShopProvider = (props) => {
         await api.post("/wishlist", { productId });
       }
     } catch {
-      // Revert on error
+      // revert on error
       if (isWished) {
         setWishlist((prev) => [...prev, productId]);
       } else {

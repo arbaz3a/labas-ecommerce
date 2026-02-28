@@ -67,7 +67,7 @@ const AdminOrders = () => {
 
   return (
     <div className="p-1 md:p-4">
-      {/* Header */}
+      {/* header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <h1
           className="text-2xl md:text-3xl tracking-tight text-black"
@@ -127,7 +127,7 @@ const AdminOrders = () => {
         </p>
       ) : (
         <>
-          {/* Desktop Table */}
+          {/* desktop table */}
           <div className="hidden md:block overflow-x-auto border border-gray-100 rounded-md bg-white shadow-sm">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -196,7 +196,7 @@ const AdminOrders = () => {
                           ))}
                         </select>
 
-                        {/* Selected Badge Overlay */}
+                        {/* selected badge overlay */}
                         <div
                           className={`
         pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-medium rounded-md
@@ -242,7 +242,7 @@ const AdminOrders = () => {
                           ))}
                         </select>
 
-                        {/* Selected Badge Overlay */}
+                        {/* selected badge overlay */}
                         <div
                           className={`
         pointer-events-none absolute inset-0 flex items-center justify-between px-4 rounded-md text-sm font-medium capitalize
@@ -269,7 +269,7 @@ const AdminOrders = () => {
             </table>
           </div>
 
-          {/* Mobile cards */}
+          {/* mobile cards */}
           <div className="md:hidden space-y-4">
             {orders.map((o) => (
               <div
@@ -334,7 +334,7 @@ const AdminOrders = () => {
                         ))}
                       </select>
 
-                      {/* Selected badge overlay */}
+                      {/* selected badge overlay */}
                       <div
                         className={`
         pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg text-sm font-semibold
@@ -380,7 +380,7 @@ const AdminOrders = () => {
                     ))}
                   </select>
 
-                  {/* Selected badge overlay */}
+                  {/* selected badge overlay */}
                   <div
                     className={`
       pointer-events-none absolute inset-0 flex items-center justify-between px-4 rounded-lg capitalize text-sm font-medium

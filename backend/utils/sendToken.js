@@ -1,10 +1,8 @@
-/**
- * Create JWT token, put it in response, and send
- */
+/* create jwt token put it in response and send */
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
 
-    // Remove password from output
+    // remove password from output
     const userObj = user.toObject();
     delete userObj.password;
 

@@ -6,7 +6,7 @@ const Order = require("../models/Order");
 const ErrorResponse = require("../utils/ErrorResponse");
 const sendTokenResponse = require("../utils/sendToken");
 
-// ─── Setup: check if admin already exists ───
+// setup check if admin already exists
 exports.checkAdminExists = async (req, res, next) => {
     try {
         const admin = await User.findOne({ role: "admin" });
@@ -16,7 +16,7 @@ exports.checkAdminExists = async (req, res, next) => {
     }
 };
 
-// ─── Setup: create first admin ───
+// setup create first admin
 exports.adminSetup = async (req, res, next) => {
     try {
         const existingAdmin = await User.findOne({ role: "admin" });
@@ -33,7 +33,7 @@ exports.adminSetup = async (req, res, next) => {
     }
 };
 
-// ─── Login: admin only ───
+// login admin only
 exports.adminLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -58,7 +58,7 @@ exports.adminLogin = async (req, res, next) => {
     }
 };
 
-// ─── Dashboard stats ───
+// dashboard stats
 exports.getDashboardStats = async (req, res, next) => {
     try {
         const [totalUsers, totalOrders, totalProducts, revenueAgg, recentOrders] =
@@ -90,7 +90,7 @@ exports.getDashboardStats = async (req, res, next) => {
     }
 };
 
-// ─── Users CRUD ───
+// users crud
 exports.getAllUsers = async (req, res, next) => {
     try {
         const { search } = req.query;
@@ -124,7 +124,7 @@ exports.deleteUser = async (req, res, next) => {
     }
 };
 
-// ─── Orders ───
+// orders
 exports.getAllOrders = async (req, res, next) => {
     try {
         const { search, status } = req.query;
@@ -190,7 +190,7 @@ exports.updatePaymentStatus = async (req, res, next) => {
     }
 };
 
-// ─── Product image upload ───
+// product image upload
 exports.uploadProductImage = async (req, res, next) => {
     try {
         if (!req.files || req.files.length === 0) {
@@ -222,7 +222,7 @@ exports.getSettings = async (req, res, next) => {
     }
 };
 
-// ─── Admin profile / password ───
+// admin profile password
 exports.getAdminProfile = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);

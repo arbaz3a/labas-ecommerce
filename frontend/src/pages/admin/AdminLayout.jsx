@@ -59,7 +59,7 @@ const AdminLayout = () => {
                 </div>
             </header>
 
-            {/* Overlay */}
+            {/* overlay */}
             {sidebarOpen && (
                 <div
                     className="admin-sidebar-overlay"
@@ -67,7 +67,7 @@ const AdminLayout = () => {
                 />
             )}
 
-            {/* Sidebar */}
+            {/* sidebar */}
             <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="admin-sidebar-brand" style={{ fontFamily: "var(--admin-font-serif)", paddingBottom: '20px', borderBottom: '1px solid #f0f0f0', marginBottom: '10px' }}>
                     LABAS <span style={{ marginLeft: 4, fontWeight: '800', fontSize: '10px', background: '#111', color: '#fff', padding: '2px 4px', borderRadius: '2px' }}>ADMIN</span>
@@ -106,7 +106,7 @@ const AdminLayout = () => {
                 </div>
             </aside>
 
-            {/* Main content */}
+            {/* main content */}
             <main className="admin-main">
                 <Outlet />
             </main>

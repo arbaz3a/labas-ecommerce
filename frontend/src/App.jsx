@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Shop from "./pages/Shop.jsx";
@@ -19,8 +19,9 @@ import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "./context/AuthContext.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
-// Admin imports
+// admin imports
 import { AdminProvider } from "./context/AdminContext.jsx";
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
 import AdminSetup from "./pages/admin/AdminSetup.jsx";
@@ -30,6 +31,21 @@ import AdminUsers from "./pages/admin/AdminUsers.jsx";
 import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminOrders from "./pages/admin/AdminOrders.jsx";
 import AdminSettings from "./pages/admin/AdminSettings.jsx";
+
+const StoreLayout = () => {
+  const location = useLocation();
+  const hideLayout =
+    ["/signin", "/signup", "/forgot-password"].includes(location.pathname) ||
+    location.pathname.startsWith("/reset-password");
+
+  return (
+    <>
+      {!hideLayout && <Navbar />}
+      <Outlet />
+      {!hideLayout && <Footer />}
+    </>
+  );
+};
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -47,18 +63,8 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
-  const location = useLocation();
-
-  const isAdminRoute = location.pathname.startsWith("/admin");
-
-  const hideLayout =
-    isAdminRoute ||
-    ["/signin", "/signup", "/forgot-password"].includes(location.pathname) ||
-    location.pathname.startsWith("/reset-password");
-
   return (
     <div>
-      {!hideLayout && <Navbar />}
       <ToastContainer
         position="top-center"
         autoClose={1800}
@@ -74,31 +80,48 @@ function App() {
       />
 
       <Routes>
-        {/* ─── Store Routes ─── */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/shop/:category" element={<Shop />} />
-        <Route path="/shop/:category/:subcategory" element={<Shop />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/product/:productID" element={<ProductDetails />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route
-          path="/profile"
-          element={<PrivateRoute><Profile /></PrivateRoute>}
-        />
-        <Route
-          path="/orders"
-          element={<PrivateRoute><Orders /></PrivateRoute>}
-        />
-        <Route path="/orderconfirmation" element={<OrderConfirmation />} />
+        {/* store routes */}
+        <Route element={<StoreLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route
+            path="/checkout"
+            element={
+              <PrivateRoute>
+                <Checkout />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/shop/:category" element={<Shop />} />
+          <Route path="/shop/:category/:subcategory" element={<Shop />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/product/:productID" element={<ProductDetails />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <Orders />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/orderconfirmation" element={<OrderConfirmation />} />
+        </Route>
 
-        {/* ─── Admin Routes ─── */}
+        {/* admin routes */}
         <Route
           path="/admin/*"
           element={
@@ -113,14 +136,15 @@ function App() {
                   <Route path="products" element={<AdminProducts />} />
                   <Route path="orders" element={<AdminOrders />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
             </AdminProvider>
           }
         />
+        {/* global 404 route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
-
-      {!hideLayout && <Footer />}
     </div>
   );
 }

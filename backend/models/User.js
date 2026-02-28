@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-// Hash password before saving
+// hash password before saving
 UserSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
         return next();
@@ -49,30 +49,30 @@ UserSchema.pre("save", async function (next) {
     next();
 });
 
-// Sign JWT and return
+// sign jwt and return
 UserSchema.methods.getSignedJwtToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     });
 };
 
-// Match entered password to hashed password in database
+// match entered password to hashed password in database
 UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Generate and hash password reset token
+// generate and hash password reset token
 UserSchema.methods.getResetPasswordToken = function () {
-    // Generate token
+    // generate token
     const resetToken = crypto.randomBytes(32).toString("hex");
 
-    // Hash token and set to resetPasswordToken field
+    // hash token and set to resetpasswordtoken field
     this.resetPasswordToken = crypto
         .createHash("sha256")
         .update(resetToken)
         .digest("hex");
 
-    // Set expire — 15 minutes
+    // set expire 15 minutes
     this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
     return resetToken;

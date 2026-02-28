@@ -2,19 +2,15 @@ const Contact = require("../models/Contact");
 const ErrorResponse = require("../utils/ErrorResponse");
 const sendEmail = require("../utils/sendEmail");
 
-/**
- * @desc    Submit contact form
- * @route   POST /api/contact
- * @access  Public
- */
+/* desc submit contact form route post api contact access public */
 exports.submitContact = async (req, res, next) => {
     try {
         const { name, email, message } = req.body;
 
-        // Save contact message to database
+        // save contact message to database
         const contact = await Contact.create({ name, email, message });
 
-        // Send notification email to admin
+        // send notification email to admin
         const html = `
       <h2>New Contact Form Submission — LABAS</h2>
       <table style="border-collapse:collapse;width:100%;max-width:500px;">
@@ -35,13 +31,13 @@ exports.submitContact = async (req, res, next) => {
 
         try {
             await sendEmail({
-                to: process.env.SMTP_USER, // Send to admin email
+                to: process.env.SMTP_USER, // send to admin email
                 subject: `LABAS Contact Form — ${name}`,
                 text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
                 html,
             });
         } catch (emailErr) {
-            // Log email error but don't fail the request — message is already saved
+            // log email error but don t fail the request message is already saved
             console.error("Contact notification email failed:", emailErr.message);
         }
 

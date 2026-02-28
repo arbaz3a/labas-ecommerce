@@ -64,7 +64,7 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            {/* Stat Cards */}
+            {/* stat cards */}
             <div className="admin-stats-grid">
                 {statCards.map((card, idx) => (
                     <div className="admin-stat-card" key={idx}>
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="admin-dashboard-sections">
-                {/* Recent Orders */}
+                {/* recent orders */}
                 <div className="admin-dashboard-section card-recent">
                     <div className="admin-section-header">
                         <h3 className="admin-section-title">Recent Orders</h3>
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                {/* Low Stock Alert placeholder */}
+                {/* low stock alert placeholder */}
                 <div className="admin-dashboard-section card-alerts">
                     <div className="admin-alert-box warning">
                         <div className="admin-alert-icon">

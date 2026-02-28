@@ -24,7 +24,7 @@ const AdminSettings = () => {
             )}
 
             <div className="admin-settings-grid" style={{ gridTemplateColumns: '1fr' }}>
-                {/* Store Information Card */}
+                {/* store information card */}
                 <div className="admin-settings-card" style={{ maxWidth: '600px' }}>
                     <div className="admin-settings-card-header">
                         <h3>

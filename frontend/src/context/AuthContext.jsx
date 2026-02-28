@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("labas_token") || null);
   const [loading, setLoading] = useState(true);
 
-  // On mount, validate stored token by calling /auth/me
+  // on mount validate stored token by calling auth me
   useEffect(() => {
     const verifyToken = async () => {
       const storedToken = localStorage.getItem("labas_token");
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
         setToken(storedToken);
       } catch {
-        // Token invalid or expired — clear
+        // token invalid or expired clear
         localStorage.removeItem("labas_token");
         localStorage.removeItem("labas_user");
         setUser(null);

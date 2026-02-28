@@ -5,7 +5,7 @@ const adminApi = axios.create({
     headers: { "Content-Type": "application/json" },
 });
 
-// Attach admin JWT token
+// attach admin jwt token
 adminApi.interceptors.request.use((config) => {
     const token = localStorage.getItem("labas_admin_token");
     if (token) {
@@ -14,7 +14,7 @@ adminApi.interceptors.request.use((config) => {
     return config;
 });
 
-// Redirect to admin login on 401
+// redirect to admin login on 401
 adminApi.interceptors.response.use(
     (response) => response,
     (error) => {

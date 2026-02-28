@@ -81,7 +81,7 @@ function Checkout() {
       return;
     }
 
-    // Build items array for the API
+    // build items array for the api
     const orderItems = [];
     Object.entries(cartItems).forEach(([id, sizes]) => {
       Object.entries(sizes).forEach(([size, qty]) => {
@@ -113,7 +113,7 @@ function Checkout() {
         paymentMethod: formData.paymentMethod,
       });
 
-      // Add new order to the local orders list
+      // add new order to the local orders list
       setOrders((prev) => [data.order, ...prev]);
       setCartItems({});
 
