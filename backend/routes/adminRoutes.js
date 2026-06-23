@@ -32,21 +32,6 @@ const loginLimiter = rateLimit({
     message: { success: false, error: "Too many attempts, please try again later" },
 });
 
-// multer config for product images
-const productStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dir = path.join(__dirname, "..", "public", "uploads");
-        const fs = require("fs");
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
-        cb(null, uniqueName);
-    },
-});
-
-
 const imageFilter = (req, file, cb) => {
     const allowed = /jpeg|jpg|png|webp/;
     const ext = allowed.test(path.extname(file.originalname).toLowerCase());
@@ -56,7 +41,7 @@ const imageFilter = (req, file, cb) => {
 };
 
 const uploadProduct = multer({
-    storage: productStorage,
+    storage: multer.memoryStorage(),
     fileFilter: imageFilter,
     limits: { fileSize: 5 * 1024 * 1024 },
 });

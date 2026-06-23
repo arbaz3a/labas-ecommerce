@@ -87,6 +87,7 @@ exports.forgotPassword = async (req, res, next) => {
                 message: "Password reset email sent",
             });
         } catch (err) {
+            console.log(err)
             // if email fails clean up the token
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;

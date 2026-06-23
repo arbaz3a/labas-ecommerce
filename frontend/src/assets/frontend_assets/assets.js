@@ -1,23 +1,14 @@
-import support_img from "./support_img.png";
-import return_product_icon from "./return-product-icon.webp";
-import quality_policy_icon from "./policy-icon.webp";
-import hero_1 from "./hero-1-DD1rBNH6.jpg";
-import category_women from "./category-women-CRFYPNCe.jpg";
-import category_men from "./category-men-DYjlA-QH.jpg";
-import category_shoes from "./category-shoes-CXgEU1V7.jpg";
-import category_watches from "./category-watches-8JXaDVbO.jpg";
-import category_fragrances from "./category-fragrances-BgahRiq5.jpg";
-
+// Frontend Assets hosted on ImageKit
 export const assets = {
-  support_img,
-  return_product_icon,
-  quality_policy_icon,
-  hero_1,
-  category_women,
-  category_men,
-  category_shoes,
-  category_watches,
-  category_fragrances,
+  support_img: "https://ik.imagekit.io/ol2kfzr8h/support_img_2YxQ5MEK2.png",
+  return_product_icon: "https://ik.imagekit.io/ol2kfzr8h/return-product-icon_jtACKmos_.webp",
+  quality_policy_icon: "https://ik.imagekit.io/ol2kfzr8h/policy-icon_Ss_JRKgwv.webp",
+  hero_1: "https://ik.imagekit.io/ol2kfzr8h/hero-1-DD1rBNH6_vcvzEsVxI.jpg",
+  category_women: "https://ik.imagekit.io/ol2kfzr8h/category-women-CRFYPNCe_SjeljzSCe.jpg",
+  category_men: "https://ik.imagekit.io/ol2kfzr8h/category-men-DYjlA-QH_p1LY_VmMH.jpg",
+  category_shoes: "https://ik.imagekit.io/ol2kfzr8h/category-shoes-CXgEU1V7_JHpXin4Hh.jpg",
+  category_watches: "https://ik.imagekit.io/ol2kfzr8h/category-watches-8JXaDVbO_ee73ozYlE.jpg",
+  category_fragrances: "https://ik.imagekit.io/ol2kfzr8h/category-fragrances-BgahRiq5_zMRlwlHmm.jpg",
 };
 
 export const megaMenuData = {

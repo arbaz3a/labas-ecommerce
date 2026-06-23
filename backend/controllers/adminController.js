@@ -5,6 +5,7 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const ErrorResponse = require("../utils/ErrorResponse");
 const sendTokenResponse = require("../utils/sendToken");
+const { uploadToImageKit } = require("../utils/imagekit");
 
 // setup check if admin already exists
 exports.checkAdminExists = async (req, res, next) => {
@@ -197,9 +198,12 @@ exports.uploadProductImage = async (req, res, next) => {
             return next(new ErrorResponse("Please upload at least one image", 400));
         }
 
-        const urls = req.files.map(
-            (f) => `/uploads/${f.filename}`
-        );
+        const uploadPromises = req.files.map(async (file) => {
+            const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.originalname}`;
+            return await uploadToImageKit(file.buffer, uniqueName);
+        });
+
+        const urls = await Promise.all(uploadPromises);
 
         res.status(200).json({ success: true, urls });
     } catch (err) {
