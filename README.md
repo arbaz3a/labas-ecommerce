@@ -128,4 +128,4 @@ The frontend application should now be accessible in your browser at `http://loc
 - **Shopping Cart:** Add, remove, and update quantities of items before checkout.
 - **Wishlist:** Save favorite products for later viewing.
 - **Admin Dashboard:** Dedicated interface for managing products, users, and tracking orders.
-- **Responsive Design:** Fully functional and visually appealing on both desktop and mobile devices.
+- **Responsive Design:** Fully functional and visually appealing on both desktop & mobile devices.
