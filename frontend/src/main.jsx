@@ -6,12 +6,14 @@ import { BrowserRouter } from "react-router-dom";
 import ShopProvider from "./context/ShopContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx"; // added
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById("root")).render(
+
   <BrowserRouter>
     <AuthProvider>
       <ShopProvider>
         <App />
       </ShopProvider>
     </AuthProvider>
-  </BrowserRouter>,
+  </BrowserRouter>,
+
 );
