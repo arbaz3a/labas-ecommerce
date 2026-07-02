@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Newsletter from "./Newsletter";
+import Newsletter from "./NewsLetter";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
