@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { FiSend } from "react-icons/fi";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+  FaWhatsapp,
+} from "react-icons/fa";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
@@ -59,13 +65,19 @@ function Newsletter() {
 
       <div className="mt-6 text-[12px] space-y-1.5 text-gray-500">
         <p>
-          <a href="tel:+923000000000" className="hover:text-black transition-colors duration-200">
+          <a
+            href="tel:+923000000000"
+            className="hover:text-black transition-colors duration-200"
+          >
             +92 3000-000000
           </a>
         </p>
         <p>
-          <a href="mailto:contact@labas.pk" className="hover:text-black transition-colors duration-200">
-            contact@labas.pk
+          <a
+            href="mailto:labasapparel@gmail.com"
+            className="hover:text-black transition-colors duration-200"
+          >
+            labasapparel@gmail.com
           </a>
         </p>
       </div>
