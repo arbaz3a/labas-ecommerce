@@ -123,25 +123,25 @@ function App() {
 
         {/* admin routes */}
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <AdminProvider>
-              <Routes>
-                <Route path="login" element={<AdminLogin />} />
-                <Route path="setup" element={<AdminSetup />} />
-                <Route element={<AdminLayout />}>
-                  <Route index element={<Navigate to="dashboard" />} />
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="products" element={<AdminProducts />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
+              <Outlet />
             </AdminProvider>
           }
-        />
+        >
+          <Route path="login" element={<AdminLogin />} />
+          <Route path="setup" element={<AdminSetup />} />
+
+          <Route element={<AdminLayout />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+        </Route>
         {/* global 404 route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
