@@ -1,0 +1,820 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily\small,
+    numbers=none,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{lightgray},
+    string=[s]{"}{"},
+    stringstyle=\color{purple},
+    comment=[l]{:},
+    commentstyle=\color{black},
+}
+
+\title{LABAS E-Commerce API Documentation}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Base URL}
+\begin{itemize}
+    \item \textbf{Production (Placeholder):} \url{https://your-backend.onrender.com/api}
+    \item \textbf{Local:} \url{http://localhost:5000/api}
+\end{itemize}
+
+\section{Authentication}
+This API uses \textbf{JSON Web Tokens (JWT)} for authentication.
+\begin{itemize}
+    \item \textbf{Obtaining a token:} Tokens are returned upon successful login (\texttt{/api/auth/login} or \texttt{/api/admin/login}) or registration (\texttt{/api/auth/register}, \texttt{/api/admin/setup}). The token is typically provided in a cookie and/or JSON response depending on the \texttt{sendTokenResponse} utility.
+    \item \textbf{Sending the token:} Protected routes expect the token in the \texttt{Authorization} header as a Bearer token: 
+    \texttt{Authorization: Bearer <your\_jwt\_token\_here>}
+    \item \textbf{Invalid/Expired Tokens:} Requests with missing, invalid, or expired tokens will receive a \texttt{401 Unauthorized} response. Accessing admin routes with a regular user token will return a \texttt{403 Forbidden} response.
+\end{itemize}
+
+\section{File Uploads}
+\begin{itemize}
+    \item Endpoints handling file uploads expect a \texttt{multipart/form-data} request.
+    \item \textbf{Product Images:} \texttt{POST /api/admin/upload/product} accepts an array of files under the field name \texttt{images} (maximum 10 files).
+    \item \textbf{Allowed Types:} JPG, PNG, WebP.
+    \item \textbf{Size Limit:} 5MB per file.
+\end{itemize}
+
+\section{Health Check}
+\subsection{1. Health Check}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/health}
+    \item \textbf{Description:} Checks if the API is running.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "LABAS API is running"
+}
+\end{lstlisting}
+\end{itemize}
+
+\section{Authentication Routes}
+
+\subsection{1. Register User}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/auth/register}
+    \item \textbf{Description:} Registers a new standard user.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{name} (String, required)
+        \item \texttt{email} (String, required, must be valid email format)
+        \item \texttt{password} (String, required, min 6 characters)
+    \end{itemize}
+    \item \textbf{Success Response (201):} \textit{(Returns JWT token)}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "token": "eyJhbGci..."
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:} 
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Email already exists / Validation errors)
+    \end{itemize}
+\end{itemize}
+
+\subsection{2. Login User}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/auth/login}
+    \item \textbf{Description:} Authenticates a user and returns a token.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{email} (String, required, valid email format)
+        \item \texttt{password} (String, required)
+    \end{itemize}
+    \item \textbf{Success Response (200):} \textit{(Returns JWT token)}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "token": "eyJhbGci..."
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{401 Unauthorized} (Invalid credentials)
+    \end{itemize}
+\end{itemize}
+
+\subsection{3. Forgot Password}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/auth/forgot-password}
+    \item \textbf{Description:} Sends a password reset link to the user's email.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{email} (String, required, valid email format)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "Password reset email sent"
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (No account with that email)
+        \item \texttt{500 Internal Server Error} (Email could not be sent)
+    \end{itemize}
+\end{itemize}
+
+\subsection{4. Reset Password}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/auth/reset-password/:token}
+    \item \textbf{Description:} Resets the password using a valid token.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{token} (String) - Reset token received in email
+    \end{itemize}
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{password} (String, required, min 6 characters)
+    \end{itemize}
+    \item \textbf{Success Response (200):} \textit{(Returns new JWT token)}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "token": "eyJhbGci..."
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Invalid or expired reset token)
+    \end{itemize}
+\end{itemize}
+
+\subsection{5. Get Current User (Me)}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/auth/me}
+    \item \textbf{Description:} Retrieves the logged-in user's details.
+    \item \textbf{Authentication Required:} Yes (User or Admin)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "user": {
+    "_id": "60d5ec...",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "user"
+  }
+}
+\end{lstlisting}
+\end{itemize}
+
+\section{Product Routes}
+
+\subsection{1. Get All Products}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/products}
+    \item \textbf{Description:} Retrieves a list of products with optional filtering.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Query Params:}
+    \begin{itemize}
+        \item \texttt{category} (String)
+        \item \texttt{subCategory} (String)
+        \item \texttt{search} (String) - Searches name, category, subCategory, description, and productId.
+        \item \texttt{bestseller} (String: "true")
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "count": 1,
+  "products": [
+    {
+      "_id": "60d5ec...",
+      "name": "Classic T-Shirt",
+      "price": 999,
+      "category": "Men"
+    }
+  ]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{2. Get Product By ID}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/products/:id}
+    \item \textbf{Description:} Retrieves a single product by its database ID.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String) - Product ID
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "product": { ... }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Product not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{3. Create Product}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/products}
+    \item \textbf{Description:} Creates a new product.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Body:} Standard product fields (e.g., name, description, price, stock, category, subCategory, sizes, careInstructions, image array, bestseller).
+    \item \textbf{Success Response (201):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "product": { ... }
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{4. Update Product}
+\begin{itemize}
+    \item \textbf{HTTP Method:} PUT
+    \item \textbf{Path:} \texttt{/api/products/:id}
+    \item \textbf{Description:} Updates an existing product.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String)
+    \end{itemize}
+    \item \textbf{Request Body:} Fields to update.
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "product": { ... }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Product not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{5. Delete Product}
+\begin{itemize}
+    \item \textbf{HTTP Method:} DELETE
+    \item \textbf{Path:} \texttt{/api/products/:id}
+    \item \textbf{Description:} Deletes a product.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "Product deleted"
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Product not found)
+    \end{itemize}
+\end{itemize}
+
+\section{Order Routes}
+
+\subsection{1. Create Order}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/orders}
+    \item \textbf{Description:} Creates a new order for the authenticated user.
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{items} (Array of Objects, required) - e.g., \texttt{[\{ "productId": "...", "quantity": 1, "size": "M" \}]}
+        \item \texttt{shippingAddress} (Object, required)
+        \item \texttt{paymentMethod} (String, required)
+    \end{itemize}
+    \item \textbf{Success Response (201):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "order": {
+    "user": "60d5ec...",
+    "items": [...],
+    "totalPrice": 1198,
+    "status": "Processing"
+  }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (No order items / Missing shipping or payment)
+        \item \texttt{404 Not Found} (A product in the order was not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{2. Get My Orders}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/orders}
+    \item \textbf{Description:} Retrieves all orders placed by the logged-in user.
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "count": 2,
+  "orders": [...]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{3. Get Order By ID}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/orders/:id}
+    \item \textbf{Description:} Retrieves a specific order (if it belongs to the logged-in user).
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String) - Order ID
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "order": { ... }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{403 Forbidden} (Not authorized to view this order)
+        \item \texttt{404 Not Found} (Order not found)
+    \end{itemize}
+\end{itemize}
+
+\section{Wishlist Routes}
+
+\subsection{1. Get Wishlist}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/wishlist}
+    \item \textbf{Description:} Retrieves the logged-in user's wishlist.
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "products": [...]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{2. Add to Wishlist}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/wishlist}
+    \item \textbf{Description:} Adds a product to the user's wishlist.
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{productId} (String, required)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "products": ["60d5ec..."]
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Product ID is required)
+        \item \texttt{404 Not Found} (Product not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{3. Remove from Wishlist}
+\begin{itemize}
+    \item \textbf{HTTP Method:} DELETE
+    \item \textbf{Path:} \texttt{/api/wishlist/:productId}
+    \item \textbf{Description:} Removes a product from the user's wishlist.
+    \item \textbf{Authentication Required:} Yes (User)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{productId} (String)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "products": []
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Wishlist not found)
+    \end{itemize}
+\end{itemize}
+
+\section{Contact Routes}
+
+\subsection{1. Submit Contact Form}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/contact}
+    \item \textbf{Description:} Submits a message via the contact form and sends an email notification.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{name} (String, required)
+        \item \texttt{email} (String, required, valid email format)
+        \item \texttt{message} (String, required, max 1000 characters)
+    \end{itemize}
+    \item \textbf{Success Response (201):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "Your message has been sent successfully",
+  "data": { ... }
+}
+\end{lstlisting}
+\end{itemize}
+
+\section{Admin Routes}
+
+\subsection{1. Check Admin Exists}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/setup-check}
+    \item \textbf{Description:} Checks if any admin account exists (used for initial setup flow).
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "exists": false
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{2. Admin Setup}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/admin/setup}
+    \item \textbf{Description:} Creates the first admin account. Fails if an admin already exists.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Rate Limiting:} Max 10 requests per 15 minutes.
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{name} (String, required)
+        \item \texttt{email} (String, required, valid email format)
+        \item \texttt{password} (String, required, min 6 characters)
+    \end{itemize}
+    \item \textbf{Success Response (201):} \textit{(Returns JWT token)}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "token": "eyJhbGci..."
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Admin already exists. Setup blocked.)
+    \end{itemize}
+\end{itemize}
+
+\subsection{3. Admin Login}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/admin/login}
+    \item \textbf{Description:} Authenticates an admin.
+    \item \textbf{Authentication Required:} No
+    \item \textbf{Rate Limiting:} Max 10 requests per 15 minutes.
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{email} (String, required, valid email format)
+        \item \texttt{password} (String, required)
+    \end{itemize}
+    \item \textbf{Success Response (200):} \textit{(Returns JWT token)}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "token": "eyJhbGci..."
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{401 Unauthorized} (Invalid credentials)
+        \item \texttt{403 Forbidden} (Access denied. Admin only.)
+    \end{itemize}
+\end{itemize}
+
+\subsection{4. Get Dashboard Stats}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/dashboard}
+    \item \textbf{Description:} Retrieves aggregate statistics for the admin dashboard.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "stats": {
+    "totalUsers": 15,
+    "totalOrders": 120,
+    "revenue": 50000,
+    "totalProducts": 45
+  },
+  "recentOrders": [...]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{5. Get All Users}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/users}
+    \item \textbf{Description:} Retrieves all users with optional search.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Query Params:}
+    \begin{itemize}
+        \item \texttt{search} (String) - Searches name and email
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "users": [...]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{6. Delete User}
+\begin{itemize}
+    \item \textbf{HTTP Method:} DELETE
+    \item \textbf{Path:} \texttt{/api/admin/users/:id}
+    \item \textbf{Description:} Deletes a specific user.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String) - User ID
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "User deleted"
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (User not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{7. Get All Orders}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/orders}
+    \item \textbf{Description:} Retrieves all orders with optional filtering.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Query Params:}
+    \begin{itemize}
+        \item \texttt{search} (String)
+        \item \texttt{status} (String) - Filter by order status
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "orders": [...]
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{8. Update Order Status}
+\begin{itemize}
+    \item \textbf{HTTP Method:} PUT
+    \item \textbf{Path:} \texttt{/api/admin/orders/:id/status}
+    \item \textbf{Description:} Updates the status of an order.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String) - Order ID
+    \end{itemize}
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{status} (String)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "order": { ... }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Order not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{9. Update Payment Status}
+\begin{itemize}
+    \item \textbf{HTTP Method:} PUT
+    \item \textbf{Path:} \texttt{/api/admin/orders/:id/payment}
+    \item \textbf{Description:} Updates the payment status of an order.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Params:}
+    \begin{itemize}
+        \item \texttt{id} (String) - Order ID
+    \end{itemize}
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{paymentStatus} (String)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "order": { ... }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{404 Not Found} (Order not found)
+    \end{itemize}
+\end{itemize}
+
+\subsection{10. Upload Product Image}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/admin/upload/product}
+    \item \textbf{Description:} Uploads up to 10 product images to ImageKit.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Form-Data:}
+    \begin{itemize}
+        \item \texttt{images} (File Array) - Max 10 files, 5MB each, allowed: JPG/PNG/WebP.
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "urls": ["https://ik.imagekit.io/..."]
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Please upload at least one image / Invalid file type)
+    \end{itemize}
+\end{itemize}
+
+\subsection{11. Get Settings}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/settings}
+    \item \textbf{Description:} Retrieves application settings from \texttt{data/settings.json}.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "settings": { ... }
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{12. Get Admin Profile}
+\begin{itemize}
+    \item \textbf{HTTP Method:} GET
+    \item \textbf{Path:} \texttt{/api/admin/profile}
+    \item \textbf{Description:} Retrieves the logged-in admin's profile.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "user": { ... }
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{13. Update Admin Profile}
+\begin{itemize}
+    \item \textbf{HTTP Method:} PUT
+    \item \textbf{Path:} \texttt{/api/admin/profile}
+    \item \textbf{Description:} Updates the logged-in admin's name and email.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{name} (String)
+        \item \texttt{email} (String)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "user": { ... }
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{14. Change Admin Password}
+\begin{itemize}
+    \item \textbf{HTTP Method:} PUT
+    \item \textbf{Path:} \texttt{/api/admin/password}
+    \item \textbf{Description:} Changes the logged-in admin's password.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{currentPassword} (String, required)
+        \item \texttt{newPassword} (String, required, min 6 characters)
+    \end{itemize}
+    \item \textbf{Success Response (200):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "Password updated"
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (Current password is incorrect)
+    \end{itemize}
+\end{itemize}
+
+\subsection{15. Add New Admin}
+\begin{itemize}
+    \item \textbf{HTTP Method:} POST
+    \item \textbf{Path:} \texttt{/api/admin/add-admin}
+    \item \textbf{Description:} Creates a new administrator account.
+    \item \textbf{Authentication Required:} Yes (Admin)
+    \item \textbf{Request Body:}
+    \begin{itemize}
+        \item \texttt{name} (String, required)
+        \item \texttt{email} (String, required, valid email format)
+        \item \texttt{password} (String, required, min 6 characters)
+    \end{itemize}
+    \item \textbf{Success Response (201):}
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "user": {
+    "name": "Admin 2",
+    "email": "admin2@example.com",
+    "role": "admin"
+  }
+}
+\end{lstlisting}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item \texttt{400 Bad Request} (A user with this email already exists)
+    \end{itemize}
+\end{itemize}
+
+\section{Notes on Review}
+\begin{enumerate}
+    \item \textbf{Unused or Inconsistent Routes:}
+    \begin{itemize}
+        \item The \texttt{/api/admin/settings} endpoint looks for a file \texttt{data/settings.json}, but there is no corresponding \texttt{PUT /api/admin/settings} to ever update this file. It is currently read-only.
+        \item The \texttt{/api/auth/me} endpoint returns \texttt{\{ success: true, user \}} but uses \texttt{protect} middleware which sets \texttt{req.user}. It is slightly redundant if the frontend just decodes the JWT, but it's a standard pattern.
+        \item For \texttt{/api/admin/orders/:id/status} and \texttt{/api/admin/orders/:id/payment}, there are no \texttt{express-validator} rules defined in \texttt{adminRoutes.js} checking that the status/paymentStatus are valid enums. This relies strictly on Mongoose's \texttt{runValidators: true} inside the controller.
+        \item For \texttt{/api/orders} (Create Order), there is no express validation middleware in \texttt{orderRoutes.js} for the complex nested object (items, shippingAddress, paymentMethod); it relies solely on the controller logic.
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
