@@ -40,7 +40,7 @@ app.use("/api/admin", require("./routes/adminRoutes"));
 
 // health check
 app.get("/api/health", (req, res) => {
-    res.status(200).json({ success: true, message: "LABAS API is running" });
+    res.status(200).json({ success: true, message: "Hello World, LABAS API is running" });
 });
 
 // error handler must be last
