@@ -296,7 +296,7 @@ const AdminProducts = () => {
                         src={
                           p.image[0].startsWith("http")
                             ? p.image[0]
-                            : `http://localhost:5000${p.image[0]}`
+                            : `${import.meta.env.VITE_BACKEND_URL}${p.image[0]}`
                         }
                         alt={p.name}
                         className="admin-product-thumb"
@@ -364,7 +364,7 @@ const AdminProducts = () => {
                       src={
                         p.image[0].startsWith("http")
                           ? p.image[0]
-                          : `http://localhost:5000${p.image[0]}`
+                          : `${import.meta.env.VITE_BACKEND_URL}${p.image[0]}`
                       }
                       alt={p.name}
                       className="admin-product-thumb-mobile"
@@ -676,7 +676,7 @@ const AdminProducts = () => {
                             src.startsWith("data:") ||
                             src.startsWith("blob:")
                               ? src
-                              : `http://localhost:5000${src}`;
+                              : `${import.meta.env.VITE_BACKEND_URL}${src}`;
                           return (
                             <div className="admin-image-thumb" key={i}>
                               <img src={imgSrc} alt="" />
